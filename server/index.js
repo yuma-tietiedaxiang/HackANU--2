@@ -138,6 +138,32 @@ app.get("/api/dashboard", (req, res) => {
   res.sendFile(jsonPath);
 });
 
+// Speech service endpoint
+app.post("/api/speech", (req, res) => {
+  const scriptPath = path.resolve(__dirname, "..", "scenario", "speech.py");
+  const py = spawn("python3", [scriptPath], {
+    cwd: path.resolve(__dirname, ".."),
+    env: { ...process.env },
+  });
+
+  let stdout = "";
+  let stderr = "";
+
+  py.stdout.on("data", (d) => {
+    stdout += d.toString();
+  });
+  py.stderr.on("data", (d) => {
+    stderr += d.toString();
+  });
+
+  py.on("close", (code) => {
+    if (code === 0) {
+      return res.json({ ok: true, message: "Speech executed successfully" });
+    }
+    res.status(500).json({ ok: false, code, error: stderr || stdout });
+  });
+});
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

@@ -9,13 +9,25 @@ import { NetworkingHub } from "./components/NetworkingHub";
 import { ScenarioSimulator } from "./components/ScenarioSimulator";
 import { motion } from "motion/react";
 import { TrendingUp, Gavel, Users, Sparkles, Target } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { runSpeech } from "./services/speechService";
 
 export default function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<
     "home" | "expenditure" | "bidding" | "networking" | "scenario"
   >("home");
+
+  // Run speech when homepage loads
+  useEffect(() => {
+    if (currentPage === "home") {
+      // Small delay to ensure page is fully loaded
+      const timer = setTimeout(() => {
+        runSpeech();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentPage]);
 
   const features = [
     {
@@ -25,6 +37,14 @@ export default function App() {
       icon: TrendingUp,
       color: "from-blue-500 to-cyan-500",
       onClick: () => setCurrentPage("expenditure"),
+    },
+    {
+      title: "Scenario Simulator",
+      description:
+        "Model different business scenarios and test strategic decisions with AI-powered simulations",
+      icon: Target,
+      color: "from-orange-500 to-red-500",
+      onClick: () => setCurrentPage("scenario"),
     },
     {
       title: "Project Plan Generator",
@@ -41,14 +61,6 @@ export default function App() {
       icon: Users,
       color: "from-green-500 to-emerald-500",
       onClick: () => setCurrentPage("networking"),
-    },
-    {
-      title: "Scenario Simulator",
-      description:
-        "Model different business scenarios and test strategic decisions with AI-powered simulations",
-      icon: Target,
-      color: "from-orange-500 to-red-500",
-      onClick: () => setCurrentPage("scenario"),
     },
   ];
 
@@ -201,7 +213,7 @@ export default function App() {
               <img
                 src={bossBabyImage}
                 alt="Boss Baby - Your Digital Co-founder"
-                className="relative w-80 h-80 object-contain rounded-full"
+                className="relative w-96 h-96 object-contain rounded-full"
               />
             </motion.div>
           </motion.div>

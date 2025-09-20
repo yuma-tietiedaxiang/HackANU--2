@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import re
-import google.generativeai as genai
+import requests
 from dotenv import load_dotenv
 
 
@@ -72,9 +72,6 @@ def main():
         print(json.dumps({"ok": False, "error": "GEMINI_API_KEY not set"}))
         sys.exit(1)
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash-latest")
-
     prompt = f"""
 You are a virtual startup simulator. Analyze the scenario below and return STRICT JSON only.
 
@@ -99,8 +96,27 @@ Example format (do not include comments):
 """
 
     try:
-        resp = model.generate_content(prompt)
-        raw_text = resp.text if hasattr(resp, "text") else str(resp)
+        # Use Gemini REST API directly
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+        
+        headers = {
+            "Content-Type": "application/json",
+        }
+        
+        data = {
+            "contents": [{
+                "parts": [{
+                    "text": prompt
+                }]
+            }]
+        }
+        
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        
+        result_data = response.json()
+        raw_text = result_data["candidates"][0]["content"]["parts"][0]["text"]
+        
         parsed = _extract_json(raw_text)
         result = {
             "ok": True,
@@ -120,5 +136,3 @@ Example format (do not include comments):
 
 if __name__ == "__main__":
     main()
-
-

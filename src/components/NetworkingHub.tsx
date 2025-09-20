@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Badge } from "./ui/badge";
+import { formatNumber } from "../utils/numberFormatter";
 import { EventDiscovery } from "./networking/EventDiscovery";
 import { EventRegistration } from "./networking/EventRegistration";
 import { CalendarDashboard } from "./networking/CalendarDashboard";
 import { NetworkingAnalytics } from "./networking/NetworkingAnalytics";
 import { RecommendationEngine } from "./networking/RecommendationEngine";
-import { 
-  ArrowLeft, 
-  Users, 
-  Calendar, 
-  Target, 
+import {
+  ArrowLeft,
+  Users,
+  Calendar,
+  Target,
   TrendingUp,
   CheckCircle,
   Clock,
@@ -21,15 +22,15 @@ import {
   Sparkles,
   Search,
   BarChart3,
-  Bot
-} from 'lucide-react';
+  Bot,
+} from "lucide-react";
 
 interface NetworkingHubProps {
   onBack: () => void;
 }
 
 export function NetworkingHub({ onBack }: NetworkingHubProps) {
-  const [activeTab, setActiveTab] = useState('discovery');
+  const [activeTab, setActiveTab] = useState("discovery");
   const [isScanning, setIsScanning] = useState(true);
 
   // Mock statistics - would come from real data
@@ -38,7 +39,7 @@ export function NetworkingHub({ onBack }: NetworkingHubProps) {
     registered: 12,
     attended: 8,
     upcomingEvents: 5,
-    networkingScore: 85
+    networkingScore: 85,
   };
 
   // Simulate initial event scanning
@@ -51,21 +52,21 @@ export function NetworkingHub({ onBack }: NetworkingHubProps) {
   }, []);
 
   const tabs = [
-    { id: 'discovery', label: 'Event Discovery', icon: Search },
-    { id: 'recommendations', label: 'AI Recommendations', icon: Bot },
-    { id: 'registration', label: 'Registration Hub', icon: Target },
-    { id: 'calendar', label: 'Calendar Dashboard', icon: Calendar },
-    { id: 'analytics', label: 'Networking Analytics', icon: BarChart3 }
+    { id: "discovery", label: "Event Discovery", icon: Search },
+    { id: "recommendations", label: "AI Recommendations", icon: Bot },
+    { id: "registration", label: "Registration Hub", icon: Target },
+    { id: "calendar", label: "Calendar Dashboard", icon: Calendar },
+    { id: "analytics", label: "Networking Analytics", icon: BarChart3 },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-90" />
-      
+
       <div className="relative z-10 container mx-auto px-6 py-8">
         {/* Header */}
-        <motion.header 
+        <motion.header
           className="flex items-center justify-between mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,9 +81,9 @@ export function NetworkingHub({ onBack }: NetworkingHubProps) {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
-            
+
             <div className="h-6 w-px bg-gray-700" />
-            
+
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
                 <Users className="w-5 h-5 text-white" />
@@ -93,12 +94,18 @@ export function NetworkingHub({ onBack }: NetworkingHubProps) {
 
           <div className="flex items-center space-x-3">
             {isScanning ? (
-              <Badge variant="outline" className="border-yellow-500 text-yellow-400 animate-pulse">
+              <Badge
+                variant="outline"
+                className="border-yellow-500 text-yellow-400 animate-pulse"
+              >
                 <Sparkles className="w-3 h-3 mr-1" />
                 Scanning Events...
               </Badge>
             ) : (
-              <Badge variant="outline" className="border-green-500 text-green-400">
+              <Badge
+                variant="outline"
+                className="border-green-500 text-green-400"
+              >
                 <CheckCircle className="w-3 h-3 mr-1" />
                 {stats.eventsFound} Events Found
               </Badge>
@@ -183,20 +190,21 @@ export function NetworkingHub({ onBack }: NetworkingHubProps) {
                   <Sparkles className="w-10 h-10 text-white" />
                 </motion.div>
               </div>
-              
+
               <div className="text-center space-y-2">
                 <h2 className="text-2xl text-white">Scanning the Ecosystem</h2>
                 <p className="text-gray-400">
-                  Our AI is discovering networking opportunities tailored to your startup...
+                  Our AI is discovering networking opportunities tailored to
+                  your startup...
                 </p>
               </div>
 
               <div className="space-y-3">
                 {[
-                  'Scanning accelerator programs...',
-                  'Finding relevant conferences...',
-                  'Analyzing competition opportunities...',
-                  'Matching investor events...'
+                  "Scanning accelerator programs...",
+                  "Finding relevant conferences...",
+                  "Analyzing competition opportunities...",
+                  "Matching investor events...",
                 ].map((step, index) => (
                   <motion.div
                     key={step}
@@ -218,7 +226,11 @@ export function NetworkingHub({ onBack }: NetworkingHubProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="space-y-6"
+              >
                 <TabsList className="grid w-full grid-cols-5 bg-gray-900 border-gray-800">
                   {tabs.map((tab) => (
                     <TabsTrigger

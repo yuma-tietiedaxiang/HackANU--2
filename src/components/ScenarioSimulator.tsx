@@ -497,7 +497,7 @@ Generated on: ${new Date().toLocaleDateString()}
                         transition={{ delay: index * 0.1, duration: 0.5 }}
                         className="flex items-start space-x-3"
                       >
-                        <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[10px] border-l-transparent border-r-transparent border-b-orange-500 mt-2 flex-shrink-0" />
                         <p className="text-gray-300 text-sm leading-relaxed">
                           {risk}
                         </p>

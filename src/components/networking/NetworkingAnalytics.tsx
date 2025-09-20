@@ -1,14 +1,30 @@
-import { useState } from 'react';
-import { motion } from 'motion/react';
+import { useState } from "react";
+import { motion } from "motion/react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Progress } from "../ui/progress";
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadialBarChart, RadialBar } from 'recharts';
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Users, 
+import { formatNumber, formatPercentage } from "../../utils/numberFormatter";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  RadialBarChart,
+  RadialBar,
+} from "recharts";
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
   Target,
   Award,
   Calendar,
@@ -20,95 +36,129 @@ import {
   Brain,
   Trophy,
   Clock,
-  MapPin
-} from 'lucide-react';
+  MapPin,
+} from "lucide-react";
 
 const monthlyNetworkingData = [
-  { month: 'Jul', events: 2, connections: 8, leads: 3, deals: 0, score: 65 },
-  { month: 'Aug', events: 3, connections: 15, leads: 6, deals: 1, score: 72 },
-  { month: 'Sep', events: 4, connections: 22, leads: 8, deals: 1, score: 78 },
-  { month: 'Oct', events: 5, connections: 35, leads: 12, deals: 2, score: 85 },
-  { month: 'Nov', events: 3, connections: 18, leads: 7, deals: 1, score: 80 },
-  { month: 'Dec', events: 6, connections: 45, leads: 15, deals: 3, score: 92 }
+  { month: "Jul", events: 2, connections: 8, leads: 3, deals: 0, score: 65 },
+  { month: "Aug", events: 3, connections: 15, leads: 6, deals: 1, score: 72 },
+  { month: "Sep", events: 4, connections: 22, leads: 8, deals: 1, score: 78 },
+  { month: "Oct", events: 5, connections: 35, leads: 12, deals: 2, score: 85 },
+  { month: "Nov", events: 3, connections: 18, leads: 7, deals: 1, score: 80 },
+  { month: "Dec", events: 6, connections: 45, leads: 15, deals: 3, score: 92 },
 ];
 
 const eventTypeData = [
-  { name: 'Conferences', value: 35, events: 8, leads: 25, color: '#3B82F6' },
-  { name: 'Webinars', value: 25, events: 12, leads: 18, color: '#10B981' },
-  { name: 'Networking', value: 20, events: 6, leads: 12, color: '#F59E0B' },
-  { name: 'Competitions', value: 12, events: 3, leads: 8, color: '#8B5CF6' },
-  { name: 'Workshops', value: 8, events: 4, leads: 5, color: '#EF4444' }
+  { name: "Conferences", value: 35, events: 8, leads: 25, color: "#3B82F6" },
+  { name: "Webinars", value: 25, events: 12, leads: 18, color: "#10B981" },
+  { name: "Networking", value: 20, events: 6, leads: 12, color: "#F59E0B" },
+  { name: "Competitions", value: 12, events: 3, leads: 8, color: "#8B5CF6" },
+  { name: "Workshops", value: 8, events: 4, leads: 5, color: "#EF4444" },
 ];
 
 const networkingROIData = [
-  { category: 'Event Costs', amount: 8500, percentage: 15 },
-  { category: 'Travel & Accommodation', amount: 12000, percentage: 21 },
-  { category: 'Time Investment', amount: 25000, percentage: 44 },
-  { category: 'Opportunity Cost', amount: 11500, percentage: 20 }
+  { category: "Event Costs", amount: 8500, percentage: 15 },
+  { category: "Travel & Accommodation", amount: 12000, percentage: 21 },
+  { category: "Time Investment", amount: 25000, percentage: 44 },
+  { category: "Opportunity Cost", amount: 11500, percentage: 20 },
 ];
 
 const connectionQualityData = [
-  { type: 'Investors', count: 18, quality: 92, deals: 5 },
-  { type: 'Customers', count: 32, quality: 78, deals: 12 },
-  { type: 'Partners', count: 24, quality: 85, deals: 8 },
-  { type: 'Mentors', count: 12, quality: 95, deals: 3 },
-  { type: 'Peers', count: 45, quality: 68, deals: 6 }
+  { type: "Investors", count: 18, quality: 92, deals: 5 },
+  { type: "Customers", count: 32, quality: 78, deals: 12 },
+  { type: "Partners", count: 24, quality: 85, deals: 8 },
+  { type: "Mentors", count: 12, quality: 95, deals: 3 },
+  { type: "Peers", count: 45, quality: 68, deals: 6 },
 ];
 
 const topEvents = [
   {
-    name: 'TechCrunch Disrupt',
+    name: "TechCrunch Disrupt",
     attendees: 5000,
     connections: 15,
     leads: 8,
     deals: 2,
-    roi: '320%',
-    score: 95
+    roi: "320%",
+    score: 95,
   },
   {
-    name: 'Y Combinator Demo Day',
+    name: "Y Combinator Demo Day",
     attendees: 2000,
     connections: 12,
     leads: 6,
     deals: 3,
-    roi: '450%',
-    score: 92
+    roi: "450%",
+    score: 92,
   },
   {
-    name: 'AI Innovation Summit',
+    name: "AI Innovation Summit",
     attendees: 1500,
     connections: 8,
     leads: 4,
     deals: 1,
-    roi: '180%',
-    score: 78
+    roi: "180%",
+    score: 78,
   },
   {
-    name: 'Startup Grind Global',
+    name: "Startup Grind Global",
     attendees: 3000,
     connections: 10,
     leads: 5,
     deals: 1,
-    roi: '210%',
-    score: 82
-  }
+    roi: "210%",
+    score: 82,
+  },
 ];
 
 const networkingGoals = [
-  { goal: 'Connect with 50 investors', current: 32, target: 50, percentage: 64 },
-  { goal: 'Attend 20 events this year', current: 16, target: 20, percentage: 80 },
-  { goal: 'Generate 100 qualified leads', current: 78, target: 100, percentage: 78 },
-  { goal: 'Close 10 partnership deals', current: 7, target: 10, percentage: 70 }
+  {
+    goal: "Connect with 50 investors",
+    current: 32,
+    target: 50,
+    percentage: 64,
+  },
+  {
+    goal: "Attend 20 events this year",
+    current: 16,
+    target: 20,
+    percentage: 80,
+  },
+  {
+    goal: "Generate 100 qualified leads",
+    current: 78,
+    target: 100,
+    percentage: 78,
+  },
+  {
+    goal: "Close 10 partnership deals",
+    current: 7,
+    target: 10,
+    percentage: 70,
+  },
 ];
 
 export function NetworkingAnalytics() {
-  const [timeframe, setTimeframe] = useState<'3m' | '6m' | '1y'>('6m');
-  const [selectedMetric, setSelectedMetric] = useState<'connections' | 'leads' | 'deals' | 'score'>('score');
+  const [timeframe, setTimeframe] = useState<"3m" | "6m" | "1y">("6m");
+  const [selectedMetric, setSelectedMetric] = useState<
+    "connections" | "leads" | "deals" | "score"
+  >("score");
 
-  const totalConnections = connectionQualityData.reduce((sum, item) => sum + item.count, 0);
-  const totalLeads = monthlyNetworkingData.reduce((sum, month) => sum + month.leads, 0);
-  const totalDeals = monthlyNetworkingData.reduce((sum, month) => sum + month.deals, 0);
-  const avgNetworkingScore = Math.round(monthlyNetworkingData.reduce((sum, month) => sum + month.score, 0) / monthlyNetworkingData.length);
+  const totalConnections = connectionQualityData.reduce(
+    (sum, item) => sum + item.count,
+    0
+  );
+  const totalLeads = monthlyNetworkingData.reduce(
+    (sum, month) => sum + month.leads,
+    0
+  );
+  const totalDeals = monthlyNetworkingData.reduce(
+    (sum, month) => sum + month.deals,
+    0
+  );
+  const avgNetworkingScore = Math.round(
+    monthlyNetworkingData.reduce((sum, month) => sum + month.score, 0) /
+      monthlyNetworkingData.length
+  );
 
   return (
     <motion.div
@@ -186,13 +236,17 @@ export function NetworkingAnalytics() {
                 <span>Networking Performance Trends</span>
               </div>
               <div className="flex space-x-1">
-                {['3m', '6m', '1y'].map((period) => (
+                {["3m", "6m", "1y"].map((period) => (
                   <Button
                     key={period}
-                    variant={timeframe === period ? 'default' : 'outline'}
+                    variant={timeframe === period ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setTimeframe(period as '3m' | '6m' | '1y')}
-                    className={timeframe === period ? 'bg-blue-600 text-white' : 'border-gray-600 text-gray-300'}
+                    onClick={() => setTimeframe(period as "3m" | "6m" | "1y")}
+                    className={
+                      timeframe === period
+                        ? "bg-blue-600 text-white"
+                        : "border-gray-600 text-gray-300"
+                    }
                   >
                     {period.toUpperCase()}
                   </Button>
@@ -207,17 +261,35 @@ export function NetworkingAnalytics() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="month" stroke="#9CA3AF" />
                   <YAxis stroke="#9CA3AF" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#F3F4F6'
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1F2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#F3F4F6",
                     }}
                   />
-                  <Line type="monotone" dataKey="score" stroke="#3B82F6" strokeWidth={2} dot={{ r: 4 }} />
-                  <Line type="monotone" dataKey="connections" stroke="#10B981" strokeWidth={2} dot={{ r: 4 }} />
-                  <Line type="monotone" dataKey="leads" stroke="#F59E0B" strokeWidth={2} dot={{ r: 4 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#3B82F6"
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="connections"
+                    stroke="#10B981"
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="leads"
+                    stroke="#F59E0B"
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -248,23 +320,26 @@ export function NetworkingAnalytics() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#F3F4F6'
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1F2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#F3F4F6",
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            
+
             <div className="space-y-2 mt-4">
               {eventTypeData.map((item, index) => (
-                <div key={item.name} className="flex items-center justify-between">
+                <div
+                  key={item.name}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-2">
-                    <div 
+                    <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: item.color }}
                     />
@@ -299,23 +374,30 @@ export function NetworkingAnalytics() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     <h4 className="text-white">{connection.type}</h4>
-                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
+                    <Badge
+                      variant="secondary"
+                      className="bg-blue-500/20 text-blue-400"
+                    >
                       {connection.count} connections
                     </Badge>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
                       <p className="text-white text-sm">Quality Score</p>
-                      <p className="text-2xl text-white">{connection.quality}%</p>
+                      <p className="text-2xl text-white">
+                        {connection.quality}%
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-gray-400 text-sm">Deals Closed</p>
-                      <p className="text-xl text-green-400">{connection.deals}</p>
+                      <p className="text-xl text-green-400">
+                        {connection.deals}
+                      </p>
                     </div>
                   </div>
                 </div>
-                
+
                 <Progress value={connection.quality} className="h-2" />
               </motion.div>
             ))}
@@ -344,11 +426,11 @@ export function NetworkingAnalytics() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="text-white mb-2">{event.name}</h4>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                       <div className="flex items-center space-x-2 text-gray-400">
                         <Users className="w-4 h-4" />
-                        <span>{event.attendees.toLocaleString()} attendees</span>
+                        <span>{formatNumber(event.attendees)} attendees</span>
                       </div>
                       <div className="flex items-center space-x-2 text-blue-400">
                         <Network className="w-4 h-4" />
@@ -368,17 +450,27 @@ export function NetworkingAnalytics() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-3 flex-shrink-0">
                     <div className="text-right">
                       <p className="text-white text-sm">Event Score</p>
                       <p className="text-2xl text-white">{event.score}</p>
                     </div>
-                    
+
                     <div className="w-16 h-16">
                       <ResponsiveContainer width="100%" height="100%">
-                        <RadialBarChart cx="50%" cy="50%" innerRadius="60%" outerRadius="90%" data={[{ value: event.score }]}>
-                          <RadialBar dataKey="value" cornerRadius={10} fill="#3B82F6" />
+                        <RadialBarChart
+                          cx="50%"
+                          cy="50%"
+                          innerRadius="60%"
+                          outerRadius="90%"
+                          data={[{ value: event.score }]}
+                        >
+                          <RadialBar
+                            dataKey="value"
+                            cornerRadius={10}
+                            fill="#3B82F6"
+                          />
                         </RadialBarChart>
                       </ResponsiveContainer>
                     </div>
@@ -410,23 +502,25 @@ export function NetworkingAnalytics() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-white text-sm">{goal.goal}</h4>
-                  <Badge 
+                  <Badge
                     className={`${
-                      goal.percentage >= 80 
-                        ? 'bg-green-500/20 text-green-400' 
-                        : goal.percentage >= 60 
-                        ? 'bg-yellow-500/20 text-yellow-400'
-                        : 'bg-red-500/20 text-red-400'
+                      goal.percentage >= 80
+                        ? "bg-green-500/20 text-green-400"
+                        : goal.percentage >= 60
+                        ? "bg-yellow-500/20 text-yellow-400"
+                        : "bg-red-500/20 text-red-400"
                     }`}
                   >
                     {goal.percentage}%
                   </Badge>
                 </div>
-                
+
                 <div className="mb-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-400">Progress</span>
-                    <span className="text-white">{goal.current} / {goal.target}</span>
+                    <span className="text-white">
+                      {goal.current} / {goal.target}
+                    </span>
                   </div>
                   <Progress value={goal.percentage} className="h-3 mt-1" />
                 </div>
@@ -450,23 +544,34 @@ export function NetworkingAnalytics() {
               <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <p className="text-white text-sm">Strong Performance Trend</p>
-                <p className="text-gray-400 text-xs">Your networking score has increased by 27% over the past 6 months, indicating excellent relationship building.</p>
+                <p className="text-gray-400 text-xs">
+                  Your networking score has increased by 27% over the past 6
+                  months, indicating excellent relationship building.
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <p className="text-white text-sm">Optimal Event Mix</p>
-                <p className="text-gray-400 text-xs">Conferences generate 60% more qualified leads than other event types. Consider increasing conference attendance.</p>
+                <p className="text-gray-400 text-xs">
+                  Conferences generate 60% more qualified leads than other event
+                  types. Consider increasing conference attendance.
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0" />
               <div>
-                <p className="text-white text-sm">Investor Connection Opportunity</p>
-                <p className="text-gray-400 text-xs">You're 32% below your investor connection goal. Focus on seed/Series A events in Q1.</p>
+                <p className="text-white text-sm">
+                  Investor Connection Opportunity
+                </p>
+                <p className="text-gray-400 text-xs">
+                  You're 32% below your investor connection goal. Focus on
+                  seed/Series A events in Q1.
+                </p>
               </div>
             </div>
           </div>
