@@ -1,9 +1,9 @@
 {
   "summary": {
-    "total_spent": 142457.0,
-    "average_invoice_amount": 15828.555555555555,
-    "total_vat_paid": 14245.7,
-    "number_of_invoices": 9,
+    "total_spent": 142464.0,
+    "average_invoice_amount": 14246.4,
+    "total_vat_paid": 14246.4,
+    "number_of_invoices": 10,
     "date_range": {
       "min": "2013-07-24",
       "max": "2021-02-03"
@@ -13,6 +13,10 @@
     {
       "month": "2013-07",
       "amount": 3.0
+    },
+    {
+      "month": "2013-12",
+      "amount": 7.0
     },
     {
       "month": "2014-08",
@@ -81,6 +85,10 @@
       "amount": 20.0
     },
     {
+      "client": "Davila, Reed and Wright Moore, Guerrero and Jacobson\n041 Faulkner Island 730 Henderson Ridge\nSouth Feliciaview, IA 68431 Port Michelleville, VT 58312",
+      "amount": 7.0
+    },
+    {
       "client": "Jensen PLC Cox-Moore\n565 Kelly Freeway Apt. 583 9085 Ashley Ford Suite 319\nEast Rachelburgh, KS 55286 South Sydney, SD 05269",
       "amount": 3.0
     }
@@ -93,6 +101,10 @@
     {
       "net": 26141.0,
       "vat": 2614.1
+    },
+    {
+      "net": 7.0,
+      "vat": 0.7
     },
     {
       "net": 22291.0,
@@ -126,21 +138,21 @@
   "invoice_amount_distribution": [
     {
       "range": "$3-$11108",
-      "count": 4,
-      "totalValue": 1084.0,
-      "percentage": 44.4
+      "count": 5,
+      "totalValue": 1091.0,
+      "percentage": 50.0
     },
     {
       "range": "$11108-$22213",
       "count": 2,
       "totalValue": 37413.0,
-      "percentage": 22.2
+      "percentage": 20.0
     },
     {
       "range": "$22213-$33318",
       "count": 2,
       "totalValue": 48432.0,
-      "percentage": 22.2
+      "percentage": 20.0
     },
     {
       "range": "$33318-$44423",
@@ -152,45 +164,45 @@
       "range": "$44423-$55528",
       "count": 1,
       "totalValue": 55528.0,
-      "percentage": 11.1
+      "percentage": 10.0
     }
   ],
   "vat_analysis": [
     {
       "name": "Net Amount",
-      "value": 142457.0,
+      "value": 142464.0,
       "color": "#3B82F6"
     },
     {
       "name": "VAT Amount",
-      "value": 14245.7,
+      "value": 14246.4,
       "color": "#EF4444"
     }
   ],
   "predictions": [
     {
       "month": "Oct",
-      "forecast": 22007.245807112366
+      "forecast": 22354.580818324972
     },
     {
       "month": "Nov",
-      "forecast": 23983.946422039044
+      "forecast": 24615.11195850086
     },
     {
       "month": "Dec",
-      "forecast": 25936.472996217584
+      "forecast": 26901.787022827557
     },
     {
       "month": "Jan",
-      "forecast": 27950.405359264674
+      "forecast": 29254.230767011293
     },
     {
       "month": "Feb",
-      "forecast": 29920.086535502218
+      "forecast": 31558.355715031834
     },
     {
       "month": "Mar",
-      "forecast": 31907.738993928007
+      "forecast": 33851.987595809675
     }
   ],
   "invoices": [
@@ -209,6 +221,14 @@
       "vat": 2614.1,
       "net_amount": 26141.0,
       "client": "Gonzalez, Bauer and Taylor Collins-Williams\n200 Jackson Flat 7227 Michael Lakes Apt. 810\nAnthonytown, AZ 83497 North Ashley, TN 15350"
+    },
+    {
+      "invoice_no": "64603610",
+      "date": "2013-12-29",
+      "total_amount": 7.0,
+      "vat": 0.7,
+      "net_amount": 7.0,
+      "client": "Davila, Reed and Wright Moore, Guerrero and Jacobson\n041 Faulkner Island 730 Henderson Ridge\nSouth Feliciaview, IA 68431 Port Michelleville, VT 58312"
     },
     {
       "invoice_no": "18531177",

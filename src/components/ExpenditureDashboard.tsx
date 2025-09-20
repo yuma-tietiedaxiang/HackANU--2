@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
@@ -10,19 +10,19 @@ import { CategoryBreakdown } from "./dashboard/CategoryBreakdown";
 import { InvoiceDistribution } from "./dashboard/InvoiceDistribution";
 import { Forecasting } from "./dashboard/Forecasting";
 import { SustainabilityTab } from "./dashboard/SustainabilityTab";
-import { 
-  ArrowLeft, 
-  Upload, 
-  TrendingUp, 
-  PieChart, 
-  BarChart3, 
-  Brain, 
+import {
+  ArrowLeft,
+  Upload,
+  TrendingUp,
+  PieChart,
+  BarChart3,
+  Brain,
   Leaf,
   FileText,
   CheckCircle,
   Clock,
-  Sparkles
-} from 'lucide-react';
+  Sparkles,
+} from "lucide-react";
 
 interface ExpenditureDashboardProps {
   onBack: () => void;
@@ -31,37 +31,53 @@ interface ExpenditureDashboardProps {
 export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
   const [invoicesUploaded, setInvoicesUploaded] = useState(false);
   const [isUploaderOpen, setIsUploaderOpen] = useState(false);
-  const [processingStatus, setProcessingStatus] = useState<'idle' | 'processing' | 'complete'>('idle');
+  const [processingStatus, setProcessingStatus] = useState<
+    "idle" | "processing" | "complete"
+  >("idle");
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
   const handleInvoicesUploaded = (files: string[]) => {
     setUploadedFiles(files);
     setIsUploaderOpen(false);
-    setProcessingStatus('processing');
-    
-    // Simulate OCR and AI processing
-    setTimeout(() => {
-      setProcessingStatus('complete');
-      setInvoicesUploaded(true);
-    }, 3000);
+    setProcessingStatus("processing");
+
+    // 1) 上传到开发服务器并保存到 src/assets/invoices
+    const form = new FormData();
+    // 由于本地组件仅传文件名，这里改为直接打开输入让用户重新选择文件
+    // 实际产品中可改为在 InvoiceUploader 内直接上传
+    // 这里仅触发后端处理
+
+    fetch("http://localhost:3000/api/process", { method: "POST" })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(await r.text());
+        return r.json();
+      })
+      .then(() => {
+        setProcessingStatus("complete");
+        setInvoicesUploaded(true);
+      })
+      .catch((e) => {
+        console.error(e);
+        setProcessingStatus("idle");
+      });
   };
 
   const tabs = [
-    { id: 'trends', label: 'Spending Trends', icon: TrendingUp },
-    { id: 'breakdown', label: 'Category Breakdown', icon: PieChart },
-    { id: 'distribution', label: 'Invoice Distribution', icon: BarChart3 },
-    { id: 'forecasting', label: 'Forecasting', icon: Brain },
-    { id: 'sustainability', label: 'Sustainability', icon: Leaf }
+    { id: "trends", label: "Spending Trends", icon: TrendingUp },
+    { id: "breakdown", label: "Category Breakdown", icon: PieChart },
+    { id: "distribution", label: "Invoice Distribution", icon: BarChart3 },
+    { id: "forecasting", label: "Forecasting", icon: Brain },
+    { id: "sustainability", label: "Sustainability", icon: Leaf },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-90" />
-      
+
       <div className="relative z-10 container mx-auto px-6 py-8">
         {/* Header */}
-        <motion.header 
+        <motion.header
           className="flex items-center justify-between mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,9 +92,9 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
-            
+
             <div className="h-6 w-px bg-gray-700" />
-            
+
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-white" />
@@ -88,9 +104,13 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
           </div>
 
           {invoicesUploaded && (
-            <Badge variant="outline" className="border-green-500 text-green-400">
+            <Badge
+              variant="outline"
+              className="border-green-500 text-green-400"
+            >
               <CheckCircle className="w-3 h-3 mr-1" />
-              {uploadedFiles.length} Invoice{uploadedFiles.length !== 1 ? 's' : ''} Processed
+              {uploadedFiles.length} Invoice
+              {uploadedFiles.length !== 1 ? "s" : ""} Processed
             </Badge>
           )}
         </motion.header>
@@ -106,17 +126,18 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
               transition={{ duration: 0.6 }}
               className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
             >
-              {processingStatus === 'idle' && (
+              {processingStatus === "idle" && (
                 <>
                   <div className="text-center space-y-4 max-w-lg">
                     <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
                       <Upload className="w-10 h-10 text-white" />
                     </div>
-                    
+
                     <h2 className="text-3xl">Upload Your Invoices</h2>
                     <p className="text-gray-400 text-lg">
-                      Upload your company invoices to unlock powerful financial insights. 
-                      Our AI will extract data and build your personalized dashboard.
+                      Upload your company invoices to unlock powerful financial
+                      insights. Our AI will extract data and build your
+                      personalized dashboard.
                     </p>
                   </div>
 
@@ -148,7 +169,7 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
                 </>
               )}
 
-              {processingStatus === 'processing' && (
+              {processingStatus === "processing" && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -157,24 +178,29 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
                   <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto">
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                     >
                       <Sparkles className="w-10 h-10 text-white" />
                     </motion.div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <h2 className="text-2xl">Processing Your Invoices</h2>
                     <p className="text-gray-400">
-                      Our AI is extracting data and building your financial insights...
+                      Our AI is extracting data and building your financial
+                      insights...
                     </p>
                   </div>
 
                   <div className="space-y-3">
                     {[
-                      'Applying OCR to extract text...',
-                      'Analyzing financial data...',
-                      'Building intelligent insights...'
+                      "Applying OCR to extract text...",
+                      "Analyzing financial data...",
+                      "Building intelligent insights...",
                     ].map((step, index) => (
                       <motion.div
                         key={step}
@@ -238,7 +264,7 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
       </div>
 
       {/* Invoice Uploader Modal */}
-      <InvoiceUploader 
+      <InvoiceUploader
         isOpen={isUploaderOpen}
         onClose={() => setIsUploaderOpen(false)}
         onUpload={handleInvoicesUploaded}
