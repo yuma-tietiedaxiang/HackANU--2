@@ -31,7 +31,7 @@ export default function App() {
 
   const features = [
     {
-      title: "Expense Tracker",
+      title: "Cost-Ly",
       description:
         "Track and analyze your startup's financial health with intelligent insights",
       icon: TrendingUp,
@@ -55,7 +55,7 @@ export default function App() {
       onClick: () => setCurrentPage("bidding"),
     },
     {
-      title: "Auto-Growth Engine",
+      title: "Opportune",
       description:
         "Connect with investors, mentors, and fellow entrepreneurs in your ecosystem",
       icon: Users,
@@ -170,24 +170,12 @@ export default function App() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.8 }}
               >
-                Your digital twin that helps startups manage finances, secure
-                contracts, and build meaningful connections—all powered by
-                intelligent automation.
+                Your AI-powered business twin helping Australian MSMEs
+                streamline, scale, and succeed.
               </motion.p>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
-            >
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 text-lg"
-              >
-                Get Started
-              </Button>
-            </motion.div>
+            {/* Removed Get Started button as requested */}
           </motion.div>
 
           {/* Right Column - Boss Baby Character */}
