@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Startup Simulation Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+        textarea, input { width: 100%; padding: 8px; margin: 5px 0; }
+        textarea { height: 100px; }
+        button { padding: 10px 20px; margin-top: 10px; }
+        pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <h1>Startup Simulation Generator</h1>
+    <form method="post">
+        <label>Startup Name:</label>
+        <input type="text" name="startup_name" required>
+
+        <label>Action/Test:</label>
+        <textarea name="action_or_test" required></textarea>
+
+        <label>Context:</label>
+        <textarea name="context" required></textarea>
+
+        <label>Target Audience:</label>
+        <textarea name="audience" required></textarea>
+
+        <button type="submit">Generate Scenario</button>
+    </form>
+
+    {% if output %}
+    <h2>Generated Scenario:</h2>
+    <pre>{{ output }}</pre>
+    {% endif %}
+</body>
+</html>

@@ -80,6 +80,56 @@ app.post("/api/process", (req, res) => {
   });
 });
 
+// Scenario simulation via Python Gemini script
+app.post("/api/simulate", (req, res) => {
+  const scriptPath = path.resolve(__dirname, "..", "scenario", "generate.py");
+  const py = spawn("python3", [scriptPath], {
+    cwd: path.resolve(__dirname, ".."),
+    env: { ...process.env },
+  });
+
+  let stdout = "";
+  let stderr = "";
+
+  py.stdout.on("data", (d) => {
+    stdout += d.toString();
+  });
+  py.stderr.on("data", (d) => {
+    stderr += d.toString();
+  });
+
+  // Send JSON body to Python stdin
+  try {
+    py.stdin.write(JSON.stringify(req.body));
+    py.stdin.end();
+  } catch (e) {
+    return res.status(400).json({ ok: false, error: "Invalid request body" });
+  }
+
+  // Optional timeout (65s)
+  const timeoutMs = 65000;
+  const timeout = setTimeout(() => {
+    py.kill("SIGKILL");
+  }, timeoutMs);
+
+  py.on("close", (code) => {
+    clearTimeout(timeout);
+    if (code === 0) {
+      try {
+        const parsed = JSON.parse(stdout.trim());
+        return res.json(parsed);
+      } catch (e) {
+        return res.status(500).json({
+          ok: false,
+          error: "Failed to parse Python output",
+          raw: stdout.trim(),
+        });
+      }
+    }
+    res.status(500).json({ ok: false, code, error: stderr || stdout });
+  });
+});
+
 // Fetch current dashboard JSON
 app.get("/api/dashboard", (req, res) => {
   const jsonPath = path.join(publicDir, "invoice-dashboard.json");

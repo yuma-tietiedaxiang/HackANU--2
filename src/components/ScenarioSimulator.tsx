@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -40,15 +40,15 @@ interface GeneratedScenario {
 }
 
 export function ScenarioSimulator({ onBack }: ScenarioSimulatorProps) {
-  const [inputs, setInputs] = useState<ScenarioInputs>({
+  const [inputs, setInputs] = useState({
     startupName: "",
     actionTest: "",
     context: "",
     targetAudience: "",
   });
-  const [generatedScenario, setGeneratedScenario] =
-    useState<GeneratedScenario | null>(null);
+  const [generatedScenario, setGeneratedScenario] = useState(null as any);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null as any);
 
   const handleInputChange = (field: keyof ScenarioInputs, value: string) => {
     setInputs((prev) => ({ ...prev, [field]: value }));
@@ -65,38 +65,46 @@ export function ScenarioSimulator({ onBack }: ScenarioSimulatorProps) {
     }
 
     setIsGenerating(true);
+    setErrorMsg(null);
+    setGeneratedScenario(null);
 
-    // Simulate AI generation
-    setTimeout(() => {
+    try {
+      const apiBase = (import.meta as any).env?.VITE_API_BASE || "";
+      const resp = await fetch(`${apiBase}/api/simulate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startupName: inputs.startupName,
+          actionTest: inputs.actionTest,
+          context: inputs.context,
+          targetAudience: inputs.targetAudience,
+        }),
+      });
+
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        throw new Error(data.error || "Simulation failed");
+      }
+
       const scenario: GeneratedScenario = {
-        summary: `Analysis for ${inputs.startupName}: Testing ${inputs.actionTest} within the context of ${inputs.context}, targeting ${inputs.targetAudience}. This strategic initiative represents a calculated approach to market expansion and product validation, with potential for significant impact on business growth and market positioning.`,
-        positiveOutcomes: [
-          `Enhanced market penetration within ${inputs.targetAudience} segment`,
-          "Increased brand recognition and customer engagement",
-          "Potential 25-40% improvement in key performance metrics",
-          "Strengthened competitive advantage in the market",
-          "Expanded customer base and revenue opportunities",
-        ],
-        potentialRisks: [
-          "Resource allocation may strain current operations",
-          "Market response uncertainty could impact short-term results",
-          "Competition reaction might accelerate market changes",
-          "Implementation complexity could delay expected outcomes",
-          "Customer adoption rate may be slower than projected",
-        ],
-        recommendations: [
-          "Implement a phased rollout approach to minimize risk exposure",
-          "Establish key performance indicators and monitoring systems",
-          "Allocate 15-20% buffer in budget and timeline estimates",
-          "Develop contingency plans for potential market resistance",
-          "Consider pilot testing with a subset of target audience first",
-          "Maintain regular stakeholder communication throughout process",
-        ],
+        summary: data.executive_summary || "",
+        positiveOutcomes: Array.isArray(data.positive_outcomes)
+          ? data.positive_outcomes
+          : [],
+        potentialRisks: Array.isArray(data.potential_risks)
+          ? data.potential_risks
+          : [],
+        recommendations: Array.isArray(data.recommendations)
+          ? data.recommendations
+          : [],
       };
 
       setGeneratedScenario(scenario);
+    } catch (err: any) {
+      setErrorMsg(err?.message || "Unexpected error");
+    } finally {
       setIsGenerating(false);
-    }, 3500);
+    }
   };
 
   const handleDownloadPDF = () => {
@@ -256,6 +264,9 @@ Generated on: ${new Date().toLocaleDateString()}
                   startup details and strategic context. Our AI will generate
                   comprehensive insights, outcomes, and recommendations.
                 </p>
+                {errorMsg ? (
+                  <p className="text-red-400 mt-4">{errorMsg}</p>
+                ) : null}
               </CardContent>
             </Card>
 
