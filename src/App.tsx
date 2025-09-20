@@ -1,4 +1,4 @@
-import bossBabyImage from 'figma:asset/60370e76ad86727a660dc2e6d1cdd0123fe7159f.png';
+import bossBabyImage from "figma:asset/60370e76ad86727a660dc2e6d1cdd0123fe7159f.png";
 import { Button } from "./components/ui/button";
 import { Card } from "./components/ui/card";
 import { ChatAssistant } from "./components/ChatAssistant";
@@ -6,77 +6,95 @@ import { FeatureCard } from "./components/FeatureCard";
 import { ExpenditureDashboard } from "./components/ExpenditureDashboard";
 import { ProjectPlanGenerator } from "./components/ProjectPlanGenerator";
 import { NetworkingHub } from "./components/NetworkingHub";
-import { motion } from 'motion/react';
-import { TrendingUp, Gavel, Users, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { ScenarioSimulator } from "./components/ScenarioSimulator";
+import { motion } from "motion/react";
+import { TrendingUp, Gavel, Users, Sparkles, Target } from "lucide-react";
+import { useState } from "react";
 
 export default function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'home' | 'expenditure' | 'bidding' | 'networking'>('home');
+  const [currentPage, setCurrentPage] = useState<
+    "home" | "expenditure" | "bidding" | "networking" | "scenario"
+  >("home");
 
   const features = [
     {
       title: "Expenditure Dashboard",
-      description: "Track and analyze your startup's financial health with intelligent insights",
+      description:
+        "Track and analyze your startup's financial health with intelligent insights",
       icon: TrendingUp,
       color: "from-blue-500 to-cyan-500",
-      onClick: () => setCurrentPage('expenditure')
+      onClick: () => setCurrentPage("expenditure"),
     },
     {
       title: "Project Plan Generator",
-      description: "Create formal, compliant project documentation with AI-powered templates",
+      description:
+        "Create formal, compliant project documentation with AI-powered templates",
       icon: Gavel,
       color: "from-purple-500 to-pink-500",
-      onClick: () => setCurrentPage('bidding')
+      onClick: () => setCurrentPage("bidding"),
     },
     {
       title: "Networking Registration",
-      description: "Connect with investors, mentors, and fellow entrepreneurs in your ecosystem",
+      description:
+        "Connect with investors, mentors, and fellow entrepreneurs in your ecosystem",
       icon: Users,
       color: "from-green-500 to-emerald-500",
-      onClick: () => setCurrentPage('networking')
-    }
+      onClick: () => setCurrentPage("networking"),
+    },
+    {
+      title: "Scenario Simulator",
+      description:
+        "Model different business scenarios and test strategic decisions with AI-powered simulations",
+      icon: Target,
+      color: "from-orange-500 to-red-500",
+      onClick: () => setCurrentPage("scenario"),
+    },
   ];
 
-  if (currentPage === 'expenditure') {
-    return <ExpenditureDashboard onBack={() => setCurrentPage('home')} />;
+  if (currentPage === "expenditure") {
+    return <ExpenditureDashboard onBack={() => setCurrentPage("home")} />;
   }
 
-  if (currentPage === 'bidding') {
-    return <ProjectPlanGenerator onBack={() => setCurrentPage('home')} />;
+  if (currentPage === "bidding") {
+    return <ProjectPlanGenerator onBack={() => setCurrentPage("home")} />;
   }
 
-  if (currentPage === 'networking') {
-    return <NetworkingHub onBack={() => setCurrentPage('home')} />;
+  if (currentPage === "networking") {
+    return <NetworkingHub onBack={() => setCurrentPage("home")} />;
+  }
+
+  if (currentPage === "scenario") {
+    return <ScenarioSimulator onBack={() => setCurrentPage("home")} />;
   }
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-90" />
-      
+
       {/* Floating particles effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full opacity-20"
-            initial={{ 
-              x: Math.random() * window.innerWidth, 
-              y: Math.random() * window.innerHeight 
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
             }}
             animate={{
               y: [null, -20, 20],
-              opacity: [0.2, 0.8, 0.2]
+              opacity: [0.2, 0.8, 0.2],
             }}
             transition={{
               duration: 3 + Math.random() * 2,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             style={{
               left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`
+              top: `${Math.random() * 100}%`,
             }}
           />
         ))}
@@ -84,7 +102,7 @@ export default function App() {
 
       <div className="relative z-10 container mx-auto px-6 py-8">
         {/* Header */}
-        <motion.header 
+        <motion.header
           className="flex justify-between items-center mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -96,7 +114,7 @@ export default function App() {
             </div>
             <span className="text-xl font-semibold">Co-founder</span>
           </div>
-          
+
           <Button
             variant="outline"
             className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
@@ -116,7 +134,7 @@ export default function App() {
             className="space-y-8"
           >
             <div className="space-y-4">
-              <motion.h1 
+              <motion.h1
                 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -124,8 +142,8 @@ export default function App() {
               >
                 Co-founder
               </motion.h1>
-              
-              <motion.p 
+
+              <motion.p
                 className="text-xl lg:text-2xl text-gray-300 italic"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -133,15 +151,16 @@ export default function App() {
               >
                 "I run on code, not equity."
               </motion.p>
-              
-              <motion.p 
+
+              <motion.p
                 className="text-lg text-gray-400 max-w-lg"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.8 }}
               >
-                Your digital co-founder that helps startups manage finances, secure contracts, 
-                and build meaningful connections—all powered by intelligent automation.
+                Your digital co-founder that helps startups manage finances,
+                secure contracts, and build meaningful connections—all powered
+                by intelligent automation.
               </motion.p>
             </div>
 
@@ -150,7 +169,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.6 }}
             >
-              <Button 
+              <Button
                 size="lg"
                 className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 text-lg"
               >
@@ -167,20 +186,20 @@ export default function App() {
             className="flex justify-center lg:justify-end"
           >
             <motion.div
-              animate={{ 
+              animate={{
                 y: [0, -10, 0],
-                rotateY: [0, 5, 0, -5, 0]
+                rotateY: [0, 5, 0, -5, 0],
               }}
-              transition={{ 
+              transition={{
                 duration: 4,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
               className="relative"
             >
               <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl" />
-              <img 
-                src={bossBabyImage} 
+              <img
+                src={bossBabyImage}
                 alt="Boss Baby - Your Digital Co-founder"
                 className="relative w-80 h-80 object-contain rounded-full"
               />
@@ -193,7 +212,7 @@ export default function App() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid md:grid-cols-3 gap-6 mb-12"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
         >
           {features.map((feature, index) => (
             <motion.div
