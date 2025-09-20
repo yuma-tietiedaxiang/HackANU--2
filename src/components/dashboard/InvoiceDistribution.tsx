@@ -1,65 +1,141 @@
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { 
-  FileText, 
-  DollarSign, 
-  TrendingUp, 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import {
+  FileText,
+  DollarSign,
+  TrendingUp,
   Calendar,
   Receipt,
   CreditCard,
   Building,
-  AlertTriangle
-} from 'lucide-react';
+  AlertTriangle,
+} from "lucide-react";
+import {
+  fetchDashboardJson,
+  toInvoiceDistribution,
+} from "../../utils/invoiceAdapter";
 
 const invoiceAmountDistribution = [
-  { range: '$0-500', count: 45, totalValue: 12500, percentage: 18.2 },
-  { range: '$500-1K', count: 32, totalValue: 24000, percentage: 25.8 },
-  { range: '$1K-5K', count: 28, totalValue: 68000, percentage: 31.4 },
-  { range: '$5K-10K', count: 12, totalValue: 84000, percentage: 15.6 },
-  { range: '$10K+', count: 8, totalValue: 95000, percentage: 8.9 }
+  { range: "$0-500", count: 45, totalValue: 12500, percentage: 18.2 },
+  { range: "$500-1K", count: 32, totalValue: 24000, percentage: 25.8 },
+  { range: "$1K-5K", count: 28, totalValue: 68000, percentage: 31.4 },
+  { range: "$5K-10K", count: 12, totalValue: 84000, percentage: 15.6 },
+  { range: "$10K+", count: 8, totalValue: 95000, percentage: 8.9 },
 ];
 
 const vatAnalysis = [
-  { name: 'Net Amount', value: 240000, color: '#3B82F6' },
-  { name: 'VAT Amount', value: 48000, color: '#EF4444' }
+  { name: "Net Amount", value: 240000, color: "#3B82F6" },
+  { name: "VAT Amount", value: 48000, color: "#EF4444" },
 ];
 
 const paymentMethodData = [
-  { method: 'Bank Transfer', count: 78, amount: 185000, color: '#10B981' },
-  { method: 'Credit Card', count: 32, amount: 45000, color: '#F59E0B' },
-  { method: 'Check', count: 15, amount: 58000, color: '#8B5CF6' }
+  { method: "Bank Transfer", count: 78, amount: 185000, color: "#10B981" },
+  { method: "Credit Card", count: 32, amount: 45000, color: "#F59E0B" },
+  { method: "Check", count: 15, amount: 58000, color: "#8B5CF6" },
 ];
 
 const supplierData = [
-  { name: 'TechCorp Solutions', invoices: 24, amount: 85000, avgAmount: 3541, lastInvoice: '2024-12-15' },
-  { name: 'Marketing Pro Agency', invoices: 18, amount: 54000, avgAmount: 3000, lastInvoice: '2024-12-10' },
-  { name: 'Office Supplies Co', invoices: 32, amount: 28000, avgAmount: 875, lastInvoice: '2024-12-12' },
-  { name: 'CloudServices Inc', invoices: 12, amount: 48000, avgAmount: 4000, lastInvoice: '2024-12-08' },
-  { name: 'Travel Solutions', invoices: 8, amount: 24000, avgAmount: 3000, lastInvoice: '2024-12-05' }
+  {
+    name: "TechCorp Solutions",
+    invoices: 24,
+    amount: 85000,
+    avgAmount: 3541,
+    lastInvoice: "2024-12-15",
+  },
+  {
+    name: "Marketing Pro Agency",
+    invoices: 18,
+    amount: 54000,
+    avgAmount: 3000,
+    lastInvoice: "2024-12-10",
+  },
+  {
+    name: "Office Supplies Co",
+    invoices: 32,
+    amount: 28000,
+    avgAmount: 875,
+    lastInvoice: "2024-12-12",
+  },
+  {
+    name: "CloudServices Inc",
+    invoices: 12,
+    amount: 48000,
+    avgAmount: 4000,
+    lastInvoice: "2024-12-08",
+  },
+  {
+    name: "Travel Solutions",
+    invoices: 8,
+    amount: 24000,
+    avgAmount: 3000,
+    lastInvoice: "2024-12-05",
+  },
 ];
 
 const monthlyVolume = [
-  { month: 'Jan', invoices: 15, amount: 45000 },
-  { month: 'Feb', invoices: 18, amount: 52000 },
-  { month: 'Mar', invoices: 16, amount: 48000 },
-  { month: 'Apr', invoices: 22, amount: 61000 },
-  { month: 'May', invoices: 19, amount: 55000 },
-  { month: 'Jun', invoices: 25, amount: 67000 },
-  { month: 'Jul', invoices: 21, amount: 59000 },
-  { month: 'Aug', invoices: 28, amount: 71000 },
-  { month: 'Sep', invoices: 23, amount: 64000 },
-  { month: 'Oct', invoices: 26, amount: 73000 },
-  { month: 'Nov', invoices: 24, amount: 68000 },
-  { month: 'Dec', invoices: 27, amount: 75000 }
+  { month: "Jan", invoices: 15, amount: 45000 },
+  { month: "Feb", invoices: 18, amount: 52000 },
+  { month: "Mar", invoices: 16, amount: 48000 },
+  { month: "Apr", invoices: 22, amount: 61000 },
+  { month: "May", invoices: 19, amount: 55000 },
+  { month: "Jun", invoices: 25, amount: 67000 },
+  { month: "Jul", invoices: 21, amount: 59000 },
+  { month: "Aug", invoices: 28, amount: 71000 },
+  { month: "Sep", invoices: 23, amount: 64000 },
+  { month: "Oct", invoices: 26, amount: 73000 },
+  { month: "Nov", invoices: 24, amount: 68000 },
+  { month: "Dec", invoices: 27, amount: 75000 },
 ];
 
 export function InvoiceDistribution() {
-  const totalInvoices = invoiceAmountDistribution.reduce((sum, range) => sum + range.count, 0);
-  const totalValue = invoiceAmountDistribution.reduce((sum, range) => sum + range.totalValue, 0);
-  const avgInvoiceValue = Math.round(totalValue / totalInvoices);
+  const [dist, setDist] = useState<ReturnType<
+    typeof toInvoiceDistribution
+  > | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const json = await fetchDashboardJson();
+        const mapped = toInvoiceDistribution(json);
+        setDist(mapped);
+      } catch (err) {
+        console.error("Failed to load invoice-dashboard.json", err);
+      }
+    })();
+  }, []);
+
+  const iad = dist?.invoiceAmountDistribution ?? invoiceAmountDistribution;
+  const vat = dist?.vatAnalysis ?? vatAnalysis;
+  const suppliers = dist?.supplierData ?? supplierData;
+  const monthly = dist?.monthlyVolume ?? monthlyVolume;
+
+  const totalInvoices = iad.reduce((sum, range) => sum + range.count, 0);
+  const totalValue = iad.reduce((sum, range) => sum + range.totalValue, 0);
+  const avgInvoiceValue = Math.round(totalValue / (totalInvoices || 1));
 
   return (
     <motion.div
@@ -141,20 +217,22 @@ export function InvoiceDistribution() {
           <CardContent>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={invoiceAmountDistribution}>
+                <BarChart data={iad}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="range" stroke="#9CA3AF" />
                   <YAxis stroke="#9CA3AF" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#F3F4F6'
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1F2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#F3F4F6",
                     }}
                     formatter={(value: number, name: string) => [
-                      name === 'count' ? `${value} invoices` : `$${value.toLocaleString()}`,
-                      name === 'count' ? 'Count' : 'Total Value'
+                      name === "count"
+                        ? `${value} invoices`
+                        : `$${value.toLocaleString()}`,
+                      name === "count" ? "Count" : "Total Value",
                     ]}
                   />
                   <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
@@ -177,7 +255,7 @@ export function InvoiceDistribution() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={vatAnalysis}
+                    data={vat}
                     cx="50%"
                     cy="50%"
                     outerRadius={100}
@@ -185,33 +263,41 @@ export function InvoiceDistribution() {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {vatAnalysis.map((entry, index) => (
+                    {vat.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#F3F4F6'
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1F2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#F3F4F6",
                     }}
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, 'Amount']}
+                    formatter={(value: number) => [
+                      `$${value.toLocaleString()}`,
+                      "Amount",
+                    ]}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="mt-4 space-y-2">
               {vatAnalysis.map((item, index) => (
-                <div key={item.name} className="flex items-center justify-between">
+                <div
+                  key={item.name}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-2">
-                    <div 
+                    <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: item.color }}
                     />
                     <span className="text-gray-300">{item.name}</span>
                   </div>
-                  <span className="text-white">${item.value.toLocaleString()}</span>
+                  <span className="text-white">
+                    ${item.value.toLocaleString()}
+                  </span>
                 </div>
               ))}
             </div>
@@ -238,11 +324,14 @@ export function InvoiceDistribution() {
                 className="p-4 bg-gray-800/50 rounded-lg"
               >
                 <div className="flex items-center space-x-3 mb-3">
-                  <div 
+                  <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: method.color + '20' }}
+                    style={{ backgroundColor: method.color + "20" }}
                   >
-                    <CreditCard className="w-4 h-4" style={{ color: method.color }} />
+                    <CreditCard
+                      className="w-4 h-4"
+                      style={{ color: method.color }}
+                    />
                   </div>
                   <h3 className="text-white">{method.method}</h3>
                 </div>
@@ -253,11 +342,18 @@ export function InvoiceDistribution() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Amount:</span>
-                    <span className="text-white">${method.amount.toLocaleString()}</span>
+                    <span className="text-white">
+                      ${method.amount.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Avg:</span>
-                    <span className="text-white">${Math.round(method.amount / method.count).toLocaleString()}</span>
+                    <span className="text-white">
+                      $
+                      {Math.round(
+                        method.amount / method.count
+                      ).toLocaleString()}
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -286,7 +382,7 @@ export function InvoiceDistribution() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {supplierData.map((supplier, index) => (
+              {suppliers.map((supplier, index) => (
                 <motion.tr
                   key={supplier.name}
                   initial={{ opacity: 0, x: -20 }}
@@ -295,10 +391,18 @@ export function InvoiceDistribution() {
                   className="border-gray-700 hover:bg-gray-800/50"
                 >
                   <TableCell className="text-white">{supplier.name}</TableCell>
-                  <TableCell className="text-gray-300">{supplier.invoices}</TableCell>
-                  <TableCell className="text-gray-300">${supplier.amount.toLocaleString()}</TableCell>
-                  <TableCell className="text-gray-300">${supplier.avgAmount.toLocaleString()}</TableCell>
-                  <TableCell className="text-gray-300">{supplier.lastInvoice}</TableCell>
+                  <TableCell className="text-gray-300">
+                    {supplier.invoices}
+                  </TableCell>
+                  <TableCell className="text-gray-300">
+                    ${supplier.amount.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-gray-300">
+                    ${supplier.avgAmount.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-gray-300">
+                    {supplier.lastInvoice}
+                  </TableCell>
                 </motion.tr>
               ))}
             </TableBody>
@@ -314,20 +418,22 @@ export function InvoiceDistribution() {
         <CardContent>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyVolume}>
+              <BarChart data={monthly}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="month" stroke="#9CA3AF" />
                 <YAxis stroke="#9CA3AF" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    borderRadius: '8px',
-                    color: '#F3F4F6'
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #374151",
+                    borderRadius: "8px",
+                    color: "#F3F4F6",
                   }}
                   formatter={(value: number, name: string) => [
-                    name === 'invoices' ? `${value} invoices` : `$${value.toLocaleString()}`,
-                    name === 'invoices' ? 'Invoice Count' : 'Total Amount'
+                    name === "invoices"
+                      ? `${value} invoices`
+                      : `$${value.toLocaleString()}`,
+                    name === "invoices" ? "Invoice Count" : "Total Amount",
                   ]}
                 />
                 <Bar dataKey="invoices" fill="#06B6D4" radius={[4, 4, 0, 0]} />

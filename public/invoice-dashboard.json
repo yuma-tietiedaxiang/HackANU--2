@@ -1,0 +1,270 @@
+{
+  "summary": {
+    "total_spent": 142457.0,
+    "average_invoice_amount": 15828.555555555555,
+    "total_vat_paid": 14245.7,
+    "number_of_invoices": 9,
+    "date_range": {
+      "min": "2013-07-24",
+      "max": "2021-02-03"
+    }
+  },
+  "monthly_spending": [
+    {
+      "month": "2013-07",
+      "amount": 3.0
+    },
+    {
+      "month": "2014-08",
+      "amount": 20.0
+    },
+    {
+      "month": "2015-04",
+      "amount": 22291.0
+    },
+    {
+      "month": "2015-07",
+      "amount": 26141.0
+    },
+    {
+      "month": "2015-08",
+      "amount": 63.0
+    },
+    {
+      "month": "2016-12",
+      "amount": 55528.0
+    },
+    {
+      "month": "2017-11",
+      "amount": 998.0
+    },
+    {
+      "month": "2018-11",
+      "amount": 17415.0
+    },
+    {
+      "month": "2021-02",
+      "amount": 19998.0
+    }
+  ],
+  "client_spending": [
+    {
+      "client": "Smith, Garcia and Brown Diaz LLC\n018 Joseph Parkway 97546 Brown Hills Apt. 820\nCharlesside, OR 90692 Sarahmouth, DC 58341",
+      "amount": 55528.0
+    },
+    {
+      "client": "Gonzalez, Bauer and Taylor Collins-Williams\n200 Jackson Flat 7227 Michael Lakes Apt. 810\nAnthonytown, AZ 83497 North Ashley, TN 15350",
+      "amount": 26141.0
+    },
+    {
+      "client": "Adkins, Campbell and Butler Bird, Bates and Johnston\nPSC 8125, Box 9401 970 Rowe Street\nAPO AA 65326 Kristieton, CO 20645",
+      "amount": 22291.0
+    },
+    {
+      "client": "Rodgers-Garcia Bruce-Reid\n4296 Lucas Springs Suite 455 7895 White Estate\nCarolfort, HI 78427 Port Ethanland, MA 15193",
+      "amount": 19998.0
+    },
+    {
+      "client": "Trujillo-Johnson Garrett, Simmons and Smith\n07030 Stevenson Stravenue 52259 Alexander Station Suite 695\nKathleenview, WA 77540 East Crystalmouth, NJ 44771",
+      "amount": 17415.0
+    },
+    {
+      "client": "Henry Inc Cole, Lee and Long\n46769 James Grove Apt. 769 PSC 5057, Box 8574\nLauraton, OR 80222 APO AP 08956",
+      "amount": 998.0
+    },
+    {
+      "client": "Kaufman-Martin Brown Ltd\n63370 William Turnpike Apt. 926 654 Robinson Villages Apt. 390\nHeatherfurt, NY 30107 West Anthonyview, PA 31030",
+      "amount": 63.0
+    },
+    {
+      "client": "Shaffer Ltd Wright LLC\n9147 Mercado Flats Suite 699 7147 Wilson Stream\nSouth Paulfort, DE 75869 Cookstad, TN 25047",
+      "amount": 20.0
+    },
+    {
+      "client": "Jensen PLC Cox-Moore\n565 Kelly Freeway Apt. 583 9085 Ashley Ford Suite 319\nEast Rachelburgh, KS 55286 South Sydney, SD 05269",
+      "amount": 3.0
+    }
+  ],
+  "vat_vs_net": [
+    {
+      "net": 998.0,
+      "vat": 99.8
+    },
+    {
+      "net": 26141.0,
+      "vat": 2614.1
+    },
+    {
+      "net": 22291.0,
+      "vat": 2229.1
+    },
+    {
+      "net": 63.0,
+      "vat": 6.3
+    },
+    {
+      "net": 20.0,
+      "vat": 2.0
+    },
+    {
+      "net": 55528.0,
+      "vat": 5552.8
+    },
+    {
+      "net": 3.0,
+      "vat": 0.3
+    },
+    {
+      "net": 19998.0,
+      "vat": 1999.8
+    },
+    {
+      "net": 17415.0,
+      "vat": 1741.5
+    }
+  ],
+  "invoice_amount_distribution": [
+    {
+      "range": "$3-$11108",
+      "count": 4,
+      "totalValue": 1084.0,
+      "percentage": 44.4
+    },
+    {
+      "range": "$11108-$22213",
+      "count": 2,
+      "totalValue": 37413.0,
+      "percentage": 22.2
+    },
+    {
+      "range": "$22213-$33318",
+      "count": 2,
+      "totalValue": 48432.0,
+      "percentage": 22.2
+    },
+    {
+      "range": "$33318-$44423",
+      "count": 0,
+      "totalValue": 0.0,
+      "percentage": 0.0
+    },
+    {
+      "range": "$44423-$55528",
+      "count": 1,
+      "totalValue": 55528.0,
+      "percentage": 11.1
+    }
+  ],
+  "vat_analysis": [
+    {
+      "name": "Net Amount",
+      "value": 142457.0,
+      "color": "#3B82F6"
+    },
+    {
+      "name": "VAT Amount",
+      "value": 14245.7,
+      "color": "#EF4444"
+    }
+  ],
+  "predictions": [
+    {
+      "month": "Oct",
+      "forecast": 22007.245807112366
+    },
+    {
+      "month": "Nov",
+      "forecast": 23983.946422039044
+    },
+    {
+      "month": "Dec",
+      "forecast": 25936.472996217584
+    },
+    {
+      "month": "Jan",
+      "forecast": 27950.405359264674
+    },
+    {
+      "month": "Feb",
+      "forecast": 29920.086535502218
+    },
+    {
+      "month": "Mar",
+      "forecast": 31907.738993928007
+    }
+  ],
+  "invoices": [
+    {
+      "invoice_no": "94215570",
+      "date": "2017-11-05",
+      "total_amount": 998.0,
+      "vat": 99.8,
+      "net_amount": 998.0,
+      "client": "Henry Inc Cole, Lee and Long\n46769 James Grove Apt. 769 PSC 5057, Box 8574\nLauraton, OR 80222 APO AP 08956"
+    },
+    {
+      "invoice_no": "24060857",
+      "date": "2015-07-09",
+      "total_amount": 26141.0,
+      "vat": 2614.1,
+      "net_amount": 26141.0,
+      "client": "Gonzalez, Bauer and Taylor Collins-Williams\n200 Jackson Flat 7227 Michael Lakes Apt. 810\nAnthonytown, AZ 83497 North Ashley, TN 15350"
+    },
+    {
+      "invoice_no": "18531177",
+      "date": "2015-04-30",
+      "total_amount": 22291.0,
+      "vat": 2229.1,
+      "net_amount": 22291.0,
+      "client": "Adkins, Campbell and Butler Bird, Bates and Johnston\nPSC 8125, Box 9401 970 Rowe Street\nAPO AA 65326 Kristieton, CO 20645"
+    },
+    {
+      "invoice_no": "37763406",
+      "date": "2015-08-17",
+      "total_amount": 63.0,
+      "vat": 6.3,
+      "net_amount": 63.0,
+      "client": "Kaufman-Martin Brown Ltd\n63370 William Turnpike Apt. 926 654 Robinson Villages Apt. 390\nHeatherfurt, NY 30107 West Anthonyview, PA 31030"
+    },
+    {
+      "invoice_no": "69607855",
+      "date": "2014-08-02",
+      "total_amount": 20.0,
+      "vat": 2.0,
+      "net_amount": 20.0,
+      "client": "Shaffer Ltd Wright LLC\n9147 Mercado Flats Suite 699 7147 Wilson Stream\nSouth Paulfort, DE 75869 Cookstad, TN 25047"
+    },
+    {
+      "invoice_no": "30083114",
+      "date": "2016-12-19",
+      "total_amount": 55528.0,
+      "vat": 5552.8,
+      "net_amount": 55528.0,
+      "client": "Smith, Garcia and Brown Diaz LLC\n018 Joseph Parkway 97546 Brown Hills Apt. 820\nCharlesside, OR 90692 Sarahmouth, DC 58341"
+    },
+    {
+      "invoice_no": "17811597",
+      "date": "2013-07-24",
+      "total_amount": 3.0,
+      "vat": 0.3,
+      "net_amount": 3.0,
+      "client": "Jensen PLC Cox-Moore\n565 Kelly Freeway Apt. 583 9085 Ashley Ford Suite 319\nEast Rachelburgh, KS 55286 South Sydney, SD 05269"
+    },
+    {
+      "invoice_no": "31386585",
+      "date": "2021-02-03",
+      "total_amount": 19998.0,
+      "vat": 1999.8,
+      "net_amount": 19998.0,
+      "client": "Rodgers-Garcia Bruce-Reid\n4296 Lucas Springs Suite 455 7895 White Estate\nCarolfort, HI 78427 Port Ethanland, MA 15193"
+    },
+    {
+      "invoice_no": "74337375",
+      "date": "2018-11-26",
+      "total_amount": 17415.0,
+      "vat": 1741.5,
+      "net_amount": 17415.0,
+      "client": "Trujillo-Johnson Garrett, Simmons and Smith\n07030 Stevenson Stravenue 52259 Alexander Station Suite 695\nKathleenview, WA 77540 East Crystalmouth, NJ 44771"
+    }
+  ]
+}

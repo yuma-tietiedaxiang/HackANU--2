@@ -1,55 +1,174 @@
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Progress } from "../ui/progress";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { 
-  Laptop, 
-  Megaphone, 
-  Coffee, 
-  Plane, 
-  Users, 
-  Zap, 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
+import {
+  Laptop,
+  Megaphone,
+  Coffee,
+  Plane,
+  Users,
+  Zap,
   Building,
   Wrench,
-  PieChart as PieChartIcon
-} from 'lucide-react';
+  PieChart as PieChartIcon,
+} from "lucide-react";
+import {
+  fetchDashboardJson,
+  toCategoryBreakdownFromClients,
+} from "../../utils/invoiceAdapter";
 
-const categoryData = [
-  { name: 'SaaS Tools', value: 180000, percentage: 28.5, color: '#3B82F6', icon: Laptop },
-  { name: 'Marketing', value: 125000, percentage: 19.8, color: '#EF4444', icon: Megaphone },
-  { name: 'Office & Utilities', value: 95000, percentage: 15.1, color: '#10B981', icon: Building },
-  { name: 'Salaries', value: 85000, percentage: 13.5, color: '#8B5CF6', icon: Users },
-  { name: 'Travel', value: 68000, percentage: 10.8, color: '#F59E0B', icon: Plane },
-  { name: 'Equipment', value: 45000, percentage: 7.1, color: '#06B6D4', icon: Wrench },
-  { name: 'Office Supplies', value: 32000, percentage: 5.1, color: '#84CC16', icon: Coffee }
+const fallbackCategoryData = [
+  {
+    name: "SaaS Tools",
+    value: 180000,
+    percentage: 28.5,
+    color: "#3B82F6",
+    icon: Laptop,
+  },
+  {
+    name: "Marketing",
+    value: 125000,
+    percentage: 19.8,
+    color: "#EF4444",
+    icon: Megaphone,
+  },
+  {
+    name: "Office & Utilities",
+    value: 95000,
+    percentage: 15.1,
+    color: "#10B981",
+    icon: Building,
+  },
+  {
+    name: "Salaries",
+    value: 85000,
+    percentage: 13.5,
+    color: "#8B5CF6",
+    icon: Users,
+  },
+  {
+    name: "Travel",
+    value: 68000,
+    percentage: 10.8,
+    color: "#F59E0B",
+    icon: Plane,
+  },
+  {
+    name: "Equipment",
+    value: 45000,
+    percentage: 7.1,
+    color: "#06B6D4",
+    icon: Wrench,
+  },
+  {
+    name: "Office Supplies",
+    value: 32000,
+    percentage: 5.1,
+    color: "#84CC16",
+    icon: Coffee,
+  },
 ];
 
-const monthlyBreakdown = [
-  { month: 'Oct', saas: 15000, marketing: 8500, office: 7200, salaries: 7800, travel: 5600, equipment: 3200, supplies: 2800 },
-  { month: 'Nov', saas: 14500, marketing: 12000, office: 8100, salaries: 7600, travel: 4200, equipment: 4800, supplies: 2600 },
-  { month: 'Dec', saas: 16200, marketing: 9800, office: 8400, salaries: 8200, travel: 6800, equipment: 2900, supplies: 3100 }
+const fallbackMonthlyBreakdown = [
+  {
+    month: "Oct",
+    saas: 15000,
+    marketing: 8500,
+    office: 7200,
+    salaries: 7800,
+    travel: 5600,
+    equipment: 3200,
+    supplies: 2800,
+  },
+  {
+    month: "Nov",
+    saas: 14500,
+    marketing: 12000,
+    office: 8100,
+    salaries: 7600,
+    travel: 4200,
+    equipment: 4800,
+    supplies: 2600,
+  },
+  {
+    month: "Dec",
+    saas: 16200,
+    marketing: 9800,
+    office: 8400,
+    salaries: 8200,
+    travel: 6800,
+    equipment: 2900,
+    supplies: 3100,
+  },
 ];
 
 const subcategories = [
-  { category: 'SaaS Tools', items: [
-    { name: 'Slack', amount: 3200, percentage: 45 },
-    { name: 'GitHub', amount: 2800, percentage: 38 },
-    { name: 'Figma', amount: 1200, percentage: 17 }
-  ]},
-  { category: 'Marketing', items: [
-    { name: 'Google Ads', amount: 4500, percentage: 52 },
-    { name: 'Social Media', amount: 2800, percentage: 32 },
-    { name: 'Content Creation', amount: 1400, percentage: 16 }
-  ]},
-  { category: 'Office & Utilities', items: [
-    { name: 'Rent', amount: 5200, percentage: 65 },
-    { name: 'Electricity', amount: 1800, percentage: 23 },
-    { name: 'Internet', amount: 950, percentage: 12 }
-  ]}
+  {
+    category: "SaaS Tools",
+    items: [
+      { name: "Slack", amount: 3200, percentage: 45 },
+      { name: "GitHub", amount: 2800, percentage: 38 },
+      { name: "Figma", amount: 1200, percentage: 17 },
+    ],
+  },
+  {
+    category: "Marketing",
+    items: [
+      { name: "Google Ads", amount: 4500, percentage: 52 },
+      { name: "Social Media", amount: 2800, percentage: 32 },
+      { name: "Content Creation", amount: 1400, percentage: 16 },
+    ],
+  },
+  {
+    category: "Office & Utilities",
+    items: [
+      { name: "Rent", amount: 5200, percentage: 65 },
+      { name: "Electricity", amount: 1800, percentage: 23 },
+      { name: "Internet", amount: 950, percentage: 12 },
+    ],
+  },
 ];
 
 export function CategoryBreakdown() {
+  const [categoryData, setCategoryData] = useState(fallbackCategoryData);
+  const [monthlyBreakdown, setMonthlyBreakdown] = useState(
+    fallbackMonthlyBreakdown
+  );
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const json = await fetchDashboardJson();
+        const mapped = toCategoryBreakdownFromClients(json);
+        // 无法映射图标：保持默认一套图标用于前 N 个条目
+        const withIcons = mapped.categoryData.map((c, idx) => ({
+          ...c,
+          icon: [Laptop, Megaphone, Building, Users, Plane, Wrench, Coffee][
+            idx % 7
+          ],
+        }));
+        setCategoryData(withIcons as any);
+        setMonthlyBreakdown(mapped.monthlyBreakdown as any);
+      } catch (err) {
+        console.error("Failed to load invoice-dashboard.json", err);
+      }
+    })();
+  }, []);
+
   const totalSpending = categoryData.reduce((sum, cat) => sum + cat.value, 0);
 
   return (
@@ -86,14 +205,17 @@ export function CategoryBreakdown() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#F3F4F6'
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1F2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#F3F4F6",
                     }}
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, 'Amount']}
+                    formatter={(value: number) => [
+                      `$${value.toLocaleString()}`,
+                      "Amount",
+                    ]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -118,19 +240,28 @@ export function CategoryBreakdown() {
                     transition={{ delay: index * 0.1, duration: 0.4 }}
                     className="flex items-center space-x-3"
                   >
-                    <div 
+                    <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: category.color + '20' }}
+                      style={{ backgroundColor: category.color + "20" }}
                     >
-                      <IconComponent className="w-4 h-4" style={{ color: category.color }} />
+                      <IconComponent
+                        className="w-4 h-4"
+                        style={{ color: category.color }}
+                      />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-white text-sm">{category.name}</span>
-                        <span className="text-gray-400 text-sm">{category.percentage}%</span>
+                        <span className="text-white text-sm">
+                          {category.name}
+                        </span>
+                        <span className="text-gray-400 text-sm">
+                          {category.percentage}%
+                        </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-300">${category.value.toLocaleString()}</span>
+                        <span className="text-gray-300">
+                          ${category.value.toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   </motion.div>
@@ -152,23 +283,64 @@ export function CategoryBreakdown() {
               <BarChart data={monthlyBreakdown}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="month" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" tickFormatter={(value) => `$${value / 1000}k`} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    borderRadius: '8px',
-                    color: '#F3F4F6'
-                  }}
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, 'Amount']}
+                <YAxis
+                  stroke="#9CA3AF"
+                  tickFormatter={(value) => `$${value / 1000}k`}
                 />
-                <Bar dataKey="saas" stackId="a" fill="#3B82F6" name="SaaS Tools" />
-                <Bar dataKey="marketing" stackId="a" fill="#EF4444" name="Marketing" />
-                <Bar dataKey="office" stackId="a" fill="#10B981" name="Office & Utilities" />
-                <Bar dataKey="salaries" stackId="a" fill="#8B5CF6" name="Salaries" />
-                <Bar dataKey="travel" stackId="a" fill="#F59E0B" name="Travel" />
-                <Bar dataKey="equipment" stackId="a" fill="#06B6D4" name="Equipment" />
-                <Bar dataKey="supplies" stackId="a" fill="#84CC16" name="Office Supplies" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #374151",
+                    borderRadius: "8px",
+                    color: "#F3F4F6",
+                  }}
+                  formatter={(value: number) => [
+                    `$${value.toLocaleString()}`,
+                    "Amount",
+                  ]}
+                />
+                <Bar
+                  dataKey="saas"
+                  stackId="a"
+                  fill="#3B82F6"
+                  name="SaaS Tools"
+                />
+                <Bar
+                  dataKey="marketing"
+                  stackId="a"
+                  fill="#EF4444"
+                  name="Marketing"
+                />
+                <Bar
+                  dataKey="office"
+                  stackId="a"
+                  fill="#10B981"
+                  name="Office & Utilities"
+                />
+                <Bar
+                  dataKey="salaries"
+                  stackId="a"
+                  fill="#8B5CF6"
+                  name="Salaries"
+                />
+                <Bar
+                  dataKey="travel"
+                  stackId="a"
+                  fill="#F59E0B"
+                  name="Travel"
+                />
+                <Bar
+                  dataKey="equipment"
+                  stackId="a"
+                  fill="#06B6D4"
+                  name="Equipment"
+                />
+                <Bar
+                  dataKey="supplies"
+                  stackId="a"
+                  fill="#84CC16"
+                  name="Office Supplies"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -186,7 +358,9 @@ export function CategoryBreakdown() {
           >
             <Card className="bg-gray-900/50 border-gray-800">
               <CardHeader>
-                <CardTitle className="text-white text-lg">{category.category}</CardTitle>
+                <CardTitle className="text-white text-lg">
+                  {category.category}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -195,8 +369,12 @@ export function CategoryBreakdown() {
                       <div className="flex items-center justify-between">
                         <span className="text-gray-300">{item.name}</span>
                         <div className="text-right">
-                          <span className="text-white">${item.amount.toLocaleString()}</span>
-                          <span className="text-gray-400 text-sm ml-2">({item.percentage}%)</span>
+                          <span className="text-white">
+                            ${item.amount.toLocaleString()}
+                          </span>
+                          <span className="text-gray-400 text-sm ml-2">
+                            ({item.percentage}%)
+                          </span>
                         </div>
                       </div>
                       <Progress value={item.percentage} className="h-2" />
@@ -231,15 +409,22 @@ export function CategoryBreakdown() {
           <CardContent className="p-4 text-center">
             <p className="text-gray-400 text-sm">Total Categories</p>
             <p className="text-xl text-white">{categoryData.length}</p>
-            <Badge className="mt-1 bg-green-500/20 text-green-400">Tracked</Badge>
+            <Badge className="mt-1 bg-green-500/20 text-green-400">
+              Tracked
+            </Badge>
           </CardContent>
         </Card>
 
         <Card className="bg-gray-900/50 border-gray-800">
           <CardContent className="p-4 text-center">
             <p className="text-gray-400 text-sm">Avg per Category</p>
-            <p className="text-xl text-white">${Math.round(totalSpending / categoryData.length).toLocaleString()}</p>
-            <Badge className="mt-1 bg-purple-500/20 text-purple-400">Monthly</Badge>
+            <p className="text-xl text-white">
+              $
+              {Math.round(totalSpending / categoryData.length).toLocaleString()}
+            </p>
+            <Badge className="mt-1 bg-purple-500/20 text-purple-400">
+              Monthly
+            </Badge>
           </CardContent>
         </Card>
       </div>
