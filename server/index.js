@@ -164,6 +164,111 @@ app.post("/api/speech", (req, res) => {
   });
 });
 
+// Plan generation endpoint
+app.post("/api/generate-plan", (req, res) => {
+  const { pdf_id } = req.body;
+
+  // Available PDFs mapping
+  const availablePdfs = {
+    asteria: "Asteria_Overview.pdf",
+    greengrid: "GreenGrid_Overview.pdf",
+    buildright: "BuildRight_Overview.pdf",
+  };
+
+  if (!pdf_id || !availablePdfs[pdf_id]) {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid PDF ID. Must be one of: asteria, greengrid, buildright",
+    });
+  }
+
+  const pdfFilename = availablePdfs[pdf_id];
+  const pdfPath = path.resolve(
+    __dirname,
+    "..",
+    "plan_generator",
+    "pdfs",
+    pdfFilename
+  );
+
+  // Check if file exists
+  if (!fs.existsSync(pdfPath)) {
+    return res.status(404).json({
+      success: false,
+      error: `PDF file not found: ${pdfFilename}`,
+    });
+  }
+
+  // Run the plan generator Python script
+  const scriptPath = path.resolve(__dirname, "plan_generator_service.py");
+  const py = spawn("python3", [scriptPath, pdfPath], {
+    cwd: path.resolve(__dirname),
+    env: { ...process.env },
+  });
+
+  let stdout = "";
+  let stderr = "";
+
+  py.stdout.on("data", (d) => {
+    stdout += d.toString();
+  });
+  py.stderr.on("data", (d) => {
+    stderr += d.toString();
+  });
+
+  py.on("close", (code) => {
+    if (code === 0) {
+      try {
+        const result = JSON.parse(stdout.trim());
+        return res.json({
+          success: true,
+          data: result.data,
+          pdf_id: pdf_id,
+          pdf_filename: pdfFilename,
+        });
+      } catch (e) {
+        return res.status(500).json({
+          success: false,
+          error: "Failed to parse Python output",
+          raw: stdout.trim(),
+        });
+      }
+    }
+    res.status(500).json({
+      success: false,
+      code,
+      error: stderr || stdout,
+    });
+  });
+});
+
+// Get available PDFs
+app.get("/api/available-pdfs", (req, res) => {
+  res.json({
+    success: true,
+    pdfs: [
+      {
+        id: "asteria",
+        name: "Asteria Overview",
+        filename: "Asteria_Overview.pdf",
+        description: "Asteria company profile and project overview",
+      },
+      {
+        id: "greengrid",
+        name: "GreenGrid Overview",
+        filename: "GreenGrid_Overview.pdf",
+        description: "GreenGrid company profile and project overview",
+      },
+      {
+        id: "buildright",
+        name: "BuildRight Overview",
+        filename: "BuildRight_Overview.pdf",
+        description: "BuildRight company profile and project overview",
+      },
+    ],
+  });
+});
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

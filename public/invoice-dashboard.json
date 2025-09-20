@@ -198,27 +198,27 @@
   "predictions": [
     {
       "month": "Oct",
-      "forecast": 23365.317438893166
+      "forecast": 23416.08582425427
     },
     {
       "month": "Nov",
-      "forecast": 26779.201846543972
+      "forecast": 26763.694960059907
     },
     {
       "month": "Dec",
-      "forecast": 30162.43783307644
+      "forecast": 30167.99814581131
     },
     {
       "month": "Jan",
-      "forecast": 33565.04820304753
+      "forecast": 33539.96096929677
     },
     {
       "month": "Feb",
-      "forecast": 36950.92634258651
+      "forecast": 36901.83618869531
     },
     {
       "month": "Mar",
-      "forecast": 40337.61170936276
+      "forecast": 40304.76360915939
     }
   ],
   "invoices": [

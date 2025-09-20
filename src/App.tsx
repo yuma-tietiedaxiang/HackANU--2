@@ -1,4 +1,4 @@
-import bossBabyImage from "figma:asset/60370e76ad86727a660dc2e6d1cdd0123fe7159f.png";
+import bossBabyImage from "./assets/60370e76ad86727a660dc2e6d1cdd0123fe7159f.png";
 import { Button } from "./components/ui/button";
 import { Card } from "./components/ui/card";
 import { ChatAssistant } from "./components/ChatAssistant";
@@ -31,7 +31,7 @@ export default function App() {
 
   const features = [
     {
-      title: "Expenditure Dashboard",
+      title: "Expense Tracker",
       description:
         "Track and analyze your startup's financial health with intelligent insights",
       icon: TrendingUp,
@@ -39,7 +39,7 @@ export default function App() {
       onClick: () => setCurrentPage("expenditure"),
     },
     {
-      title: "Scenario Simulator",
+      title: "Virtual Risk Simulator",
       description:
         "Model different business scenarios and test strategic decisions with AI-powered simulations",
       icon: Target,
@@ -47,7 +47,7 @@ export default function App() {
       onClick: () => setCurrentPage("scenario"),
     },
     {
-      title: "Project Plan Generator",
+      title: "Bid Proposal",
       description:
         "Create formal, compliant project documentation with AI-powered templates",
       icon: Gavel,
@@ -55,7 +55,7 @@ export default function App() {
       onClick: () => setCurrentPage("bidding"),
     },
     {
-      title: "Networking Registration",
+      title: "Auto-Growth Engine",
       description:
         "Connect with investors, mentors, and fellow entrepreneurs in your ecosystem",
       icon: Users,
@@ -124,7 +124,7 @@ export default function App() {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-semibold">Co-founder</span>
+            <span className="text-xl font-semibold">TwinPilot</span>
           </div>
 
           <Button
@@ -152,7 +152,7 @@ export default function App() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
               >
-                Co-founder
+                TwinPilot
               </motion.h1>
 
               <motion.p
@@ -170,9 +170,9 @@ export default function App() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.8 }}
               >
-                Your digital co-founder that helps startups manage finances,
-                secure contracts, and build meaningful connections—all powered
-                by intelligent automation.
+                Your digital twin that helps startups manage finances, secure
+                contracts, and build meaningful connections—all powered by
+                intelligent automation.
               </motion.p>
             </div>
 
@@ -212,7 +212,7 @@ export default function App() {
               <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl" />
               <img
                 src={bossBabyImage}
-                alt="Boss Baby - Your Digital Co-founder"
+                alt="Boss Baby - Your Digital Twin"
                 className="relative w-96 h-96 object-contain rounded-full"
               />
             </motion.div>

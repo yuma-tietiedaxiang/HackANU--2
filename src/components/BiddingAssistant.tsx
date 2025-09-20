@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
@@ -10,11 +10,11 @@ import { EligibilityChecker } from "./bidding/EligibilityChecker";
 import { ApplicationTemplates } from "./bidding/ApplicationTemplates";
 import { ActiveProposals } from "./bidding/ActiveProposals";
 import { CompanyProfile } from "./bidding/CompanyProfile";
-import { 
-  ArrowLeft, 
-  Upload, 
-  FileText, 
-  CheckCircle, 
+import {
+  ArrowLeft,
+  Upload,
+  FileText,
+  CheckCircle,
   Clock,
   Sparkles,
   Gavel,
@@ -24,8 +24,8 @@ import {
   Building,
   Trophy,
   XCircle,
-  Target
-} from 'lucide-react';
+  Target,
+} from "lucide-react";
 
 interface BiddingAssistantProps {
   onBack: () => void;
@@ -34,7 +34,9 @@ interface BiddingAssistantProps {
 export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
   const [profileUploaded, setProfileUploaded] = useState(false);
   const [isUploaderOpen, setIsUploaderOpen] = useState(false);
-  const [processingStatus, setProcessingStatus] = useState<'idle' | 'processing' | 'complete'>('idle');
+  const [processingStatus, setProcessingStatus] = useState<
+    "idle" | "processing" | "complete"
+  >("idle");
   const [companyData, setCompanyData] = useState<any>(null);
 
   // Mock statistics - would come from real data
@@ -43,37 +45,37 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
     won: 3,
     lost: 2,
     pending: 7,
-    successRate: 25
+    successRate: 25,
   };
 
   const handleProfileUploaded = (data: any) => {
     setCompanyData(data);
     setIsUploaderOpen(false);
-    setProcessingStatus('processing');
-    
+    setProcessingStatus("processing");
+
     // Simulate AI processing of company profile
     setTimeout(() => {
-      setProcessingStatus('complete');
+      setProcessingStatus("complete");
       setProfileUploaded(true);
     }, 3000);
   };
 
   const tabs = [
-    { id: 'tenders', label: 'Available Tenders', icon: Search },
-    { id: 'eligibility', label: 'Eligibility Checker', icon: CheckCircle },
-    { id: 'templates', label: 'Application Templates', icon: FileCheck },
-    { id: 'proposals', label: 'Active Proposals', icon: Send },
-    { id: 'profile', label: 'Company Profile', icon: Building }
+    { id: "tenders", label: "Available Tenders", icon: Search },
+    { id: "eligibility", label: "Eligibility Checker", icon: CheckCircle },
+    { id: "templates", label: "Application Templates", icon: FileCheck },
+    { id: "proposals", label: "Active Proposals", icon: Send },
+    { id: "profile", label: "Company Profile", icon: Building },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-90" />
-      
+
       <div className="relative z-10 container mx-auto px-6 py-8">
         {/* Header */}
-        <motion.header 
+        <motion.header
           className="flex items-center justify-between mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -88,19 +90,22 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
-            
+
             <div className="h-6 w-px bg-gray-700" />
-            
+
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <Gavel className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-2xl">Bidding Assistant</h1>
+              <h1 className="text-2xl">Bid Proposal</h1>
             </div>
           </div>
 
           {profileUploaded && (
-            <Badge variant="outline" className="border-green-500 text-green-400">
+            <Badge
+              variant="outline"
+              className="border-green-500 text-green-400"
+            >
               <CheckCircle className="w-3 h-3 mr-1" />
               Profile Active
             </Badge>
@@ -178,18 +183,19 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
               transition={{ duration: 0.6 }}
               className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
             >
-              {processingStatus === 'idle' && (
+              {processingStatus === "idle" && (
                 <>
                   <div className="text-center space-y-4 max-w-lg">
                     <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
                       <Upload className="w-10 h-10 text-white" />
                     </div>
-                    
+
                     <h2 className="text-3xl">Upload Company Profile</h2>
                     <p className="text-gray-400 text-lg">
-                      Upload your company profile document to unlock tender opportunities and 
-                      automated eligibility checking. Include details about your services, 
-                      team size, certifications, and past projects.
+                      Upload your company profile document to unlock tender
+                      opportunities and automated eligibility checking. Include
+                      details about your services, team size, certifications,
+                      and past projects.
                     </p>
                   </div>
 
@@ -221,7 +227,7 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
                 </>
               )}
 
-              {processingStatus === 'processing' && (
+              {processingStatus === "processing" && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -230,24 +236,29 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
                   <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto">
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                     >
                       <Sparkles className="w-10 h-10 text-white" />
                     </motion.div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <h2 className="text-2xl">Processing Your Profile</h2>
                     <p className="text-gray-400">
-                      Our AI is analyzing your company profile and matching you with relevant opportunities...
+                      Our AI is analyzing your company profile and matching you
+                      with relevant opportunities...
                     </p>
                   </div>
 
                   <div className="space-y-3">
                     {[
-                      'Extracting company information...',
-                      'Analyzing capabilities and certifications...',
-                      'Matching with tender opportunities...'
+                      "Extracting company information...",
+                      "Analyzing capabilities and certifications...",
+                      "Matching with tender opportunities...",
                     ].map((step, index) => (
                       <motion.div
                         key={step}
@@ -302,7 +313,10 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
                 </TabsContent>
 
                 <TabsContent value="profile">
-                  <CompanyProfile companyData={companyData} onUpdate={setCompanyData} />
+                  <CompanyProfile
+                    companyData={companyData}
+                    onUpdate={setCompanyData}
+                  />
                 </TabsContent>
               </Tabs>
             </motion.div>
@@ -311,7 +325,7 @@ export function BiddingAssistant({ onBack }: BiddingAssistantProps) {
       </div>
 
       {/* Company Profile Uploader Modal */}
-      <CompanyProfileUploader 
+      <CompanyProfileUploader
         isOpen={isUploaderOpen}
         onClose={() => setIsUploaderOpen(false)}
         onUpload={handleProfileUploaded}

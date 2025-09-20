@@ -99,7 +99,7 @@ export function ExpenditureDashboard({ onBack }: ExpenditureDashboardProps) {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-2xl">Expenditure Dashboard</h1>
+              <h1 className="text-2xl">Expense Tracker</h1>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -17,8 +17,8 @@ import {
   Award,
   Briefcase,
   Plus,
-  Trash2
-} from 'lucide-react';
+  Trash2,
+} from "lucide-react";
 
 interface CompanyProfileUploaderProps {
   isOpen: boolean;
@@ -50,49 +50,86 @@ interface CompanyData {
   };
 }
 
-export function CompanyProfileUploader({ isOpen, onClose, onUpload }: CompanyProfileUploaderProps) {
-  const [uploadMethod, setUploadMethod] = useState<'upload' | 'form'>('upload');
-  const [isDragging, setIsDragging] = useState(false);
+export function CompanyProfileUploader({
+  isOpen,
+  onClose,
+  onUpload,
+}: CompanyProfileUploaderProps) {
+  const [selectedPdf, setSelectedPdf] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Available PDF options from plan_generator/pdfs folder
+  const availablePdfs = [
+    {
+      id: "asteria",
+      name: "Asteria Overview",
+      filename: "Asteria_Overview.pdf",
+      description: "Asteria company profile and project overview",
+    },
+    {
+      id: "greengrid",
+      name: "GreenGrid Overview",
+      filename: "GreenGrid_Overview.pdf",
+      description: "GreenGrid company profile and project overview",
+    },
+    {
+      id: "buildright",
+      name: "BuildRight Overview",
+      filename: "BuildRight_Overview.pdf",
+      description: "BuildRight company profile and project overview",
+    },
+  ];
 
   // Form data for manual entry
   const [formData, setFormData] = useState<CompanyData>({
-    name: '',
-    description: '',
-    size: '',
-    founded: '',
-    industry: '',
+    name: "",
+    description: "",
+    size: "",
+    founded: "",
+    industry: "",
     services: [],
     certifications: [],
     pastProjects: [],
     capabilities: [],
     contactInfo: {
-      email: '',
-      phone: '',
-      address: '',
-      website: ''
-    }
+      email: "",
+      phone: "",
+      address: "",
+      website: "",
+    },
   });
 
-  const [newService, setNewService] = useState('');
-  const [newCertification, setNewCertification] = useState('');
-  const [newCapability, setNewCapability] = useState('');
+  const [newService, setNewService] = useState("");
+  const [newCertification, setNewCertification] = useState("");
+  const [newCapability, setNewCapability] = useState("");
 
-  const handleFileUpload = (files: FileList | null) => {
-    if (!files || files.length === 0) return;
+  const handlePdfSelection = (pdfId: string) => {
+    setSelectedPdf(pdfId);
+  };
+
+  const handleProcessPdf = () => {
+    if (!selectedPdf) return;
 
     setIsProcessing(true);
     
-    // Simulate file processing and data extraction
+    // Simulate PDF processing using the selected PDF
     setTimeout(() => {
+      const selectedPdfData = availablePdfs.find(
+        (pdf) => pdf.id === selectedPdf
+      );
       const mockCompanyData = {
-        name: "TechStart Solutions",
-        description: "A innovative startup specializing in AI-powered business solutions and digital transformation services.",
+        name: selectedPdfData?.name || "Selected Company",
+        description:
+          selectedPdfData?.description || "Company profile from uploaded PDF",
         size: "15-25 employees",
         founded: "2022",
         industry: "Technology Services",
-        services: ["AI Development", "Web Development", "Digital Transformation", "Cloud Solutions"],
+        services: [
+          "AI Development",
+          "Web Development",
+          "Digital Transformation",
+          "Cloud Solutions",
+        ],
         certifications: ["ISO 27001", "AWS Partner", "Google Cloud Partner"],
         pastProjects: [
           {
@@ -100,23 +137,31 @@ export function CompanyProfileUploader({ isOpen, onClose, onUpload }: CompanyPro
             client: "MedTech Corp",
             value: "$125,000",
             year: "2023",
-            description: "Developed AI-powered patient management system"
+            description: "Developed AI-powered patient management system",
           },
           {
             name: "E-commerce Platform",
             client: "RetailPro Ltd",
             value: "$85,000",
             year: "2023",
-            description: "Built scalable e-commerce solution with inventory management"
-          }
+            description:
+              "Built scalable e-commerce solution with inventory management",
+          },
         ],
-        capabilities: ["Machine Learning", "React Development", "Node.js", "AWS", "Python"],
+        capabilities: [
+          "Machine Learning",
+          "React Development",
+          "Node.js",
+          "AWS",
+          "Python",
+        ],
         contactInfo: {
           email: "contact@techstartsolutions.com",
           phone: "+1 (555) 123-4567",
           address: "123 Innovation Drive, Tech City, TC 12345",
-          website: "www.techstartsolutions.com"
-        }
+          website: "www.techstartsolutions.com",
+        },
+        selectedPdf: selectedPdfData?.filename,
       };
 
       setIsProcessing(false);
@@ -126,30 +171,36 @@ export function CompanyProfileUploader({ isOpen, onClose, onUpload }: CompanyPro
 
   const handleFormSubmit = () => {
     if (!formData.name || !formData.description) {
-      alert('Please fill in at least company name and description');
+      alert("Please fill in at least company name and description");
       return;
     }
 
     onUpload(formData);
   };
 
-  const addArrayItem = (field: 'services' | 'certifications' | 'capabilities', value: string) => {
+  const addArrayItem = (
+    field: "services" | "certifications" | "capabilities",
+    value: string
+  ) => {
     if (!value.trim()) return;
     
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: [...prev[field], value.trim()]
+      [field]: [...prev[field], value.trim()],
     }));
 
-    if (field === 'services') setNewService('');
-    if (field === 'certifications') setNewCertification('');
-    if (field === 'capabilities') setNewCapability('');
+    if (field === "services") setNewService("");
+    if (field === "certifications") setNewCertification("");
+    if (field === "capabilities") setNewCapability("");
   };
 
-  const removeArrayItem = (field: 'services' | 'certifications' | 'capabilities', index: number) => {
-    setFormData(prev => ({
+  const removeArrayItem = (
+    field: "services" | "certifications" | "capabilities",
+    index: number
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
+      [field]: prev[field].filter((_, i) => i !== index),
     }));
   };
 
@@ -170,7 +221,7 @@ export function CompanyProfileUploader({ isOpen, onClose, onUpload }: CompanyPro
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
           className="w-full max-w-4xl max-h-[90vh] overflow-hidden"
-          onClick={e => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
           <Card className="bg-gray-900/95 border-gray-700 shadow-2xl backdrop-blur-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -189,284 +240,95 @@ export function CompanyProfileUploader({ isOpen, onClose, onUpload }: CompanyPro
             </CardHeader>
 
             <CardContent className="space-y-6 max-h-[70vh] overflow-y-auto">
-              {/* Upload Method Selection */}
-              <Tabs value={uploadMethod} onValueChange={(value) => setUploadMethod(value as 'upload' | 'form')}>
-                <TabsList className="grid w-full grid-cols-2 bg-gray-800">
-                  <TabsTrigger value="upload">Upload Document</TabsTrigger>
-                  <TabsTrigger value="form">Fill Form</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="upload" className="space-y-6">
                   {isProcessing ? (
                     <div className="text-center space-y-4 py-12">
                       <motion.div
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                         className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto"
                       >
                         <FileText className="w-8 h-8 text-white" />
                       </motion.div>
                       <div>
-                        <h3 className="text-white text-lg">Processing Document</h3>
-                        <p className="text-gray-400">Extracting company information...</p>
+                    <h3 className="text-white text-lg">
+                      Processing PDF Document
+                    </h3>
+                    <p className="text-gray-400">
+                      Extracting company information using AI...
+                    </p>
                       </div>
                     </div>
                   ) : (
                     <>
-                      {/* File Upload Area */}
-                      <div
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          setIsDragging(false);
-                          handleFileUpload(e.dataTransfer.files);
-                        }}
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          setIsDragging(true);
-                        }}
-                        onDragLeave={(e) => {
-                          e.preventDefault();
-                          setIsDragging(false);
-                        }}
-                        onClick={() => fileInputRef.current?.click()}
-                        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ${
-                          isDragging 
-                            ? 'border-purple-500 bg-purple-500/10' 
-                            : 'border-gray-600 hover:border-gray-500'
-                        }`}
-                      >
+                  {/* PDF Selection */}
                         <div className="space-y-4">
-                          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto">
-                            <Upload className="w-8 h-8 text-white" />
+                    <div className="text-center space-y-2">
+                      <h3 className="text-white text-xl">
+                        Select Company Profile PDF
+                      </h3>
+                      <p className="text-gray-400">
+                        Choose from the available company overview documents to
+                        generate your project plan
+                      </p>
                           </div>
                           
-                          <div className="space-y-2">
-                            <p className="text-white">
-                              Drop your company profile document here or{' '}
-                              <span className="text-purple-400 underline">browse</span>
+                    <div className="grid grid-cols-1 gap-4">
+                      {availablePdfs.map((pdf) => (
+                        <motion.div
+                          key={pdf.id}
+                          whileHover={{ scale: 1.02 }}
+                          className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-300 ${
+                            selectedPdf === pdf.id
+                              ? "border-purple-500 bg-purple-500/10"
+                              : "border-gray-600 hover:border-gray-500"
+                          }`}
+                          onClick={() => handlePdfSelection(pdf.id)}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                              <FileText className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-white text-lg font-medium">
+                                {pdf.name}
+                              </h4>
+                              <p className="text-gray-400 text-sm">
+                                {pdf.description}
+                              </p>
+                              <p className="text-gray-500 text-xs mt-1">
+                                File: {pdf.filename}
                             </p>
-                            <p className="text-gray-400 text-sm">
-                              Supports PDF, Word, or text files up to 10MB
-                            </p>
                           </div>
-                        </div>
-
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept=".pdf,.doc,.docx,.txt"
-                          onChange={(e) => handleFileUpload(e.target.files)}
-                          className="hidden"
-                        />
+                            <div className="flex items-center">
+                              {selectedPdf === pdf.id ? (
+                                <CheckCircle className="w-6 h-6 text-purple-400" />
+                              ) : (
+                                <div className="w-6 h-6 border-2 border-gray-400 rounded-full" />
+                              )}
                       </div>
-
-                      {/* Upload Instructions */}
-                      <div className="bg-gray-800/50 rounded-lg p-4">
-                        <h3 className="text-white mb-3">Your document should include:</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-300">
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Company name and description</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Team size and founding year</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Services and capabilities</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Certifications and compliance</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Past project experience</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span>Contact information</span>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="form" className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Basic Information */}
-                    <div className="space-y-4">
-                      <h3 className="text-white">Basic Information</h3>
-                      
-                      <div>
-                        <Label htmlFor="companyName">Company Name</Label>
-                        <Input
-                          id="companyName"
-                          value={formData.name}
-                          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                          className="bg-gray-800 border-gray-700 text-white"
-                          placeholder="Your company name"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="industry">Industry</Label>
-                        <Input
-                          id="industry"
-                          value={formData.industry}
-                          onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                          className="bg-gray-800 border-gray-700 text-white"
-                          placeholder="e.g., Technology, Healthcare"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <Label htmlFor="size">Company Size</Label>
-                          <Input
-                            id="size"
-                            value={formData.size}
-                            onChange={(e) => setFormData(prev => ({ ...prev, size: e.target.value }))}
-                            className="bg-gray-800 border-gray-700 text-white"
-                            placeholder="e.g., 10-20 employees"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="founded">Founded</Label>
-                          <Input
-                            id="founded"
-                            value={formData.founded}
-                            onChange={(e) => setFormData(prev => ({ ...prev, founded: e.target.value }))}
-                            className="bg-gray-800 border-gray-700 text-white"
-                            placeholder="e.g., 2022"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="description">Company Description</Label>
-                        <Textarea
-                          id="description"
-                          value={formData.description}
-                          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                          className="bg-gray-800 border-gray-700 text-white h-24"
-                          placeholder="Brief description of your company..."
-                        />
-                      </div>
+                        </motion.div>
+                      ))}
                     </div>
 
-                    {/* Services and Capabilities */}
-                    <div className="space-y-4">
-                      <h3 className="text-white">Services & Capabilities</h3>
-                      
-                      <div>
-                        <Label>Services Offered</Label>
-                        <div className="flex space-x-2 mb-2">
-                          <Input
-                            value={newService}
-                            onChange={(e) => setNewService(e.target.value)}
-                            className="bg-gray-800 border-gray-700 text-white"
-                            placeholder="Add a service"
-                          />
+                    {selectedPdf && (
+                      <div className="flex justify-center pt-4">
                           <Button
-                            type="button"
-                            onClick={() => addArrayItem('services', newService)}
-                            size="sm"
-                            className="bg-purple-600 hover:bg-purple-700"
-                          >
-                            <Plus className="w-4 h-4" />
+                          onClick={handleProcessPdf}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3"
+                        >
+                          <FileText className="w-5 h-5 mr-2" />
+                          Process Selected PDF
                           </Button>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {formData.services.map((service, index) => (
-                            <Badge key={index} variant="secondary" className="flex items-center space-x-1">
-                              <span>{service}</span>
-                              <button onClick={() => removeArrayItem('services', index)}>
-                                <X className="w-3 h-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
                       </div>
-
-                      <div>
-                        <Label>Certifications</Label>
-                        <div className="flex space-x-2 mb-2">
-                          <Input
-                            value={newCertification}
-                            onChange={(e) => setNewCertification(e.target.value)}
-                            className="bg-gray-800 border-gray-700 text-white"
-                            placeholder="Add a certification"
-                          />
-                          <Button
-                            type="button"
-                            onClick={() => addArrayItem('certifications', newCertification)}
-                            size="sm"
-                            className="bg-purple-600 hover:bg-purple-700"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {formData.certifications.map((cert, index) => (
-                            <Badge key={index} variant="secondary" className="flex items-center space-x-1">
-                              <span>{cert}</span>
-                              <button onClick={() => removeArrayItem('certifications', index)}>
-                                <X className="w-3 h-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label>Technical Capabilities</Label>
-                        <div className="flex space-x-2 mb-2">
-                          <Input
-                            value={newCapability}
-                            onChange={(e) => setNewCapability(e.target.value)}
-                            className="bg-gray-800 border-gray-700 text-white"
-                            placeholder="Add a capability"
-                          />
-                          <Button
-                            type="button"
-                            onClick={() => addArrayItem('capabilities', newCapability)}
-                            size="sm"
-                            className="bg-purple-600 hover:bg-purple-700"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {formData.capabilities.map((capability, index) => (
-                            <Badge key={index} variant="secondary" className="flex items-center space-x-1">
-                              <span>{capability}</span>
-                              <button onClick={() => removeArrayItem('capabilities', index)}>
-                                <X className="w-3 h-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                    )}
                   </div>
-
-                  {/* Submit Button */}
-                  <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">
-                    <Button variant="outline" onClick={onClose} className="border-gray-600 text-gray-300">
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleFormSubmit}
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-                    >
-                      Create Profile
-                    </Button>
-                  </div>
-                </TabsContent>
-              </Tabs>
+                </>
+              )}
             </CardContent>
           </Card>
         </motion.div>
